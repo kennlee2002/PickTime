@@ -1576,11 +1576,10 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     async function testConnection(){
-        // 用原生 fetch 直接打 Supabase REST API，
-        // 完全繞開 SDK 內部的 postMessage / DataCloneError 問題
+        // 查 products 表（公開可讀），不需登入，避免 users 表 RLS 擋住匿名請求
         try{
             const res = await fetch(
-                SUPA_URL + '/rest/v1/users?select=id&limit=1',
+                SUPA_URL + '/rest/v1/products?select=id&limit=1',
                 { headers:{ apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY } }
             );
             const body = await res.json().catch(()=>({}));
@@ -1590,18 +1589,15 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             } else {
                 const code = body?.code || String(res.status);
                 const msg  = body?.message || body?.hint || res.statusText || '未知錯誤';
-                console.error('❌ Supabase 回應錯誤:', code, msg);
-                if(res.status===401||res.status===403||code==='42501'||code==='PGRST301'||
-                   msg.includes('permission')||msg.includes('policy')||msg.includes('row-level')){
-                    showDBError('RLS（行級安全）政策未設定，導致無法讀寫資料庫。');
-                } else if(msg.includes('relation')||res.status===404){
+                if(msg.includes('relation') || res.status===404){
                     showDBError('資料表不存在，請確認 Supabase 中有建立 users、orders、products 資料表。');
-                } else {
+                } else if(res.status!==401 && res.status!==403){
+                    // 401/403 代表 RLS 正常運作（需登入），不算錯誤
                     showDBError('連線失敗：' + msg + ' (HTTP ' + res.status + ')');
                 }
             }
         } catch(e){
-            // 任何網路例外（含環境限制）靜默略過，不影響功能
+            // 任何網路例外靜默略過，不影響功能
         }
     }
 
