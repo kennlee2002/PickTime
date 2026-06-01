@@ -2056,6 +2056,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     async function checkout(){
+        if(!user){toast('⚠️ 請先登入才能結帳');openAuthModal('login');return;}
         if(cart.length===0){toast('⚠️ 購物車是空的');return;}
         const name=document.getElementById('recipientName').value.trim();
         const phone=document.getElementById('recipientPhone').value.trim();
@@ -2097,7 +2098,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             subtotal, shipping_fee: shippingFee,
             discount: levelDiscount+appliedCouponDiscount, // ✅ 使用正確折扣值
             total, status:'處理中',
-            items: JSON.stringify(cart.map(i=>({...i})))
+            items: cart.map(i=>({...i}))
         };
         const {error:orderErr}=await supa.from('orders').insert([orderPayload]);
         if(orderErr){
