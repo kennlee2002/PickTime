@@ -613,7 +613,6 @@
         .admin-table select option{background:#1e293b}
         .admin-tab-content{display:none}
         .admin-tab-content.active{display:block}
-        #adminLoginModal .modal-card{max-width:380px}
 
         /* DB Error Banner */
         #dbErrorBanner{
@@ -1077,21 +1076,6 @@
         <div>© 2026 Picktime 拾光機 · 精緻購物首選 · 保留所有權利</div>
     </footer>
 
-    <!-- Admin Login Modal -->
-    <div class="modal" id="adminLoginModal">
-        <div class="modal-card" style="max-width:380px">
-            <button class="modal-close" onclick="document.getElementById('adminLoginModal').style.display='none'">&times;</button>
-            <h2 style="margin:0 0 6px;color:var(--accent-gold);font-family:'Playfair Display',serif">⚙️ 後台登入</h2>
-            <p class="hint" style="margin-bottom:20px">請輸入管理員密碼以進入後台控制台</p>
-            <div style="display:grid;gap:12px">
-                <input id="adminPassInput" type="password" placeholder="管理員密碼" style="width:100%;padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;outline:none;font-size:14px" onkeydown="if(event.key==='Enter')verifyAdminPass()" />
-                <div id="adminPassError" style="color:#ff8f8f;font-size:12px;display:none">❌ 密碼錯誤</div>
-                <button class="gold-btn" onclick="verifyAdminPass()" style="padding:14px;font-size:15px">進入後台 →</button>
-            </div>
-            <p class="hint" style="margin-top:14px;font-size:11px">預設密碼：<code style="color:var(--accent-gold);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:4px">picktime2026</code></p>
-        </div>
-    </div>
-
     <!-- Auth Modal -->
     <div class="modal" id="authModal">
         <div class="modal-card">
@@ -1123,7 +1107,7 @@
                 <input id="loginEmail" type="email" placeholder="電子郵件" />
                 <input id="loginPass" type="password" placeholder="密碼" />
                 <button class="gold-btn" onclick="handleLogin()" style="padding:14px;font-size:15px">登入 →</button>
-                <div class="hint">此版本以本機儲存模擬會員登入，適合展示與測試使用。</div>
+                <div class="hint">此版本以 Supabase 驗證會員登入，適合展示與測試使用。</div>
             </div>
         </div>
     </div>
@@ -1180,7 +1164,7 @@
                             <div class="svc-card"><div class="sc-icon">💵</div><div class="sc-name">貨到付款</div><div class="sc-note">加收手續費<br>NT$30</div></div>
                         </div>
                     </div>
-                    <div class="svc-warn">⚠️ 此網站為展示版本，結帳後訂單資料僅儲存於您的瀏覽器本機，不會產生真實交易或出貨行為。</div>
+                    <div class="svc-warn">⚠️ 此網站為展示版本，結帳後訂單資料儲存於 Supabase，不會產生真實交易或出貨行為。</div>
                 </div>
                 <!-- ════ 運費說明 ════ -->
                 <div class="svc-panel" id="svcPanel-shipping">
@@ -1607,7 +1591,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         updateLoginUI();
     }
 
-    // ✅ 修復版 handleLogin：RLS 錯誤時也能正確顯示名字
     async function handleLogin(){
         const email=document.getElementById('loginEmail').value.trim();
         const pass=document.getElementById('loginPass').value.trim();
@@ -1619,11 +1602,9 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             return;
         }
         clearLoginFailure(email);
-        // ✅ 關鍵修復：先從 auth user_metadata 取名字（註冊時存入），DB 讀取失敗也能正確顯示
         const metaName = authData.user.user_metadata?.name || email.split('@')[0];
         const {data, error} = await supa.from('users').select('*').eq('id', authData.user.id).maybeSingle();
         if(data && !error){
-            // ✅ 正常：成功從 users 資料表取得資料
             user={
                 ...data,
                 avatar:(data.name||data.username||'PM').slice(0,2).toUpperCase(),
@@ -1632,7 +1613,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
                 pointsHistory: typeof data.points_history==='string'?JSON.parse(data.points_history):data.points_history||[],
             };
         } else if(!data && !error){
-            // 資料不存在（舊帳號），嘗試新增
             const fallbackProfile = {
                 id: authData.user.id,
                 username: metaName, name: metaName, email,
@@ -1646,7 +1626,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             if(inserted){
                 user = { ...inserted, avatar: inserted.name?.slice(0,2).toUpperCase()||'PM', coupons: defaultCoupons, addresses: [], pointsHistory: [] };
             } else {
-                // INSERT 失敗（可能是重複），用 auth metadata 建立暫時 user
                 user = {
                     id: authData.user.id, name: metaName, username: metaName, email,
                     avatar: metaName.slice(0,2).toUpperCase(),
@@ -1655,12 +1634,12 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
                 };
             }
         } else {
-            // ✅ RLS 或其他 DB 錯誤：用 auth user_metadata 建立暫時 user（名字會正確）
             console.warn('users SELECT failed:', error?.message);
             user = {
                 id: authData.user.id, name: metaName, username: metaName, email,
                 avatar: metaName.slice(0,2).toUpperCase(),
-                level:'一般會員', spent:0, points:0, is_admin:false,
+                level:'一般會員', spent:0, points:0,
+                is_admin: authData.user.user_metadata?.is_admin === true,
                 coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
             };
         }
@@ -2249,7 +2228,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         const panel = document.getElementById('svcPanel-'+key);
         if(panel) panel.classList.add('active');
         document.querySelectorAll('.svc-nav-btn').forEach(b=>{
-            b.classList.toggle('active', b.textContent.trim() && b.getAttribute('onclick').includes(`'${key}'`));
+            b.classList.toggle('active', b.getAttribute('onclick').includes(`'${key}'`));
         });
     }
 
@@ -2263,45 +2242,52 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     // ─── Admin Panel ───
+    // ✅ 修復：將兩段拆散的邏輯整合成一個完整函式
     let isAdminLoggedIn = false;
 
-  async function openAdminLogin(){
-    if(!user){ toast('🔐 請先登入才能進入後台'); openAuthModal('login'); return; }
-    
-    // 直接讀 Supabase Auth metadata，完全不碰 users 資料表
-    const {data:{user:authUser}} = await supa.auth.getUser();
-    const isAdmin = authUser?.user_metadata?.is_admin === true || user.is_admin === true;
-    
-    if(isAdmin){
-        user.is_admin = true;
-        isAdminLoggedIn = true;
-        document.getElementById('navAdminBtn').style.color='var(--accent-gold)';
-        document.getElementById('navAdminBtn').style.borderColor='var(--accent-gold)';
-        showView('admin');
-        loadAdminDashboard();
-    } else {
-        toast('❌ 您沒有後台管理員權限');
+    async function openAdminLogin(){
+        if(!user){
+            toast('🔐 請先登入才能進入後台');
+            openAuthModal('login');
+            return;
+        }
+
+        // 第一步：直接讀 Supabase Auth metadata（最快，不碰資料庫）
+        const { data:{ user: authUser } } = await supa.auth.getUser();
+        const isAdminByMeta = authUser?.user_metadata?.is_admin === true || user.is_admin === true;
+
+        if(isAdminByMeta){
+            enterAdmin();
+            return;
+        }
+
+        // 第二步：metadata 沒有，再查 users 資料表確認
+        try {
+            const { data, error } = await supa.from('users')
+                .select('is_admin')
+                .eq('id', user.id)
+                .single();
+
+            if(!error && data?.is_admin === true){
+                user.is_admin = true;
+                enterAdmin();
+            } else {
+                toast('❌ 您沒有後台管理員權限');
+            }
+        } catch(e) {
+            toast('❌ 無法驗證管理員身份，請稍後再試');
+        }
     }
-}
-    
-    // 每次都重新從資料庫確認，不用快取值
-    const {data} = await supa.from('users')
-        .select('is_admin')
-        .eq('id', user.id)
-        .single();
-    
-    if(data?.is_admin === true){
-        user.is_admin = true;
+
+    function enterAdmin(){
         isAdminLoggedIn = true;
         document.getElementById('navAdminBtn').style.color = 'var(--accent-gold)';
         document.getElementById('navAdminBtn').style.borderColor = 'var(--accent-gold)';
         showView('admin');
         loadAdminDashboard();
-    } else {
-        toast('❌ 您沒有後台管理員權限');
     }
-}
 
+    // verifyAdminPass 保留相容性（若有地方呼叫此函式仍可運作）
     function verifyAdminPass(){ openAdminLogin(); }
 
     function logoutAdmin(){
@@ -2422,7 +2408,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         document.getElementById('statOrders').textContent=orders.length;
     }
 
-    // ✅ 修復版 boot：RLS 錯誤時也能正確顯示名字
     async function boot(){
         cart=loadJSON(cartKey,[]);
         wishlist=loadJSON(wishlistKey,[]);
@@ -2441,17 +2426,15 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
                 saveJSON(userKey, user);
                 if(user.is_admin) isAdminLoggedIn = true;
             } else {
-                // ✅ RLS 擋住或找不到，用 auth metadata 建立暫時 user
                 console.warn('boot: users read failed:', error?.message||'no data');
-               // 找到這段（約在 boot 函式裡的 else 分支）
-user = {
-    id: authUser.id, name: metaName, username: metaName,
-    email: authUser.email,
-    avatar: metaName.slice(0,2).toUpperCase(),
-    level:'一般會員', spent:0, points:0, 
-    is_admin: authUser.user_metadata?.is_admin === true,  // ← 這行換掉原本的 is_admin:false
-    coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
-};
+                user = {
+                    id: authUser.id, name: metaName, username: metaName,
+                    email: authUser.email,
+                    avatar: metaName.slice(0,2).toUpperCase(),
+                    level:'一般會員', spent:0, points:0,
+                    is_admin: authUser.user_metadata?.is_admin === true,
+                    coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
+                };
             }
         } else {
             user = null;
