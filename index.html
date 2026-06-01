@@ -595,7 +595,6 @@
         .cp-expire{font-size:10px;color:rgba(255,200,100,.7);margin-top:6px}
         .footer-col a{cursor:pointer}
 
-
         /* ─── Admin Panel ─── */
         .admin-layout{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
         .admin-sidebar{position:sticky;top:104px}
@@ -653,7 +652,6 @@
 </head>
 <body>
 
-    
     <div id="dbErrorBanner"></div>
 
     <div id="welcome-overlay">
@@ -735,7 +733,6 @@
                 </div>
             </div>
 
-            <!-- Promo banners -->
             <div class="promo-banners">
                 <div class="promo-card red" onclick="setCategory('3C')">
                     <div class="promo-badge">🔥 限時</div>
@@ -854,52 +851,33 @@
                 </aside>
 
                 <div>
-                    <!-- 帳戶概覽 -->
                     <div class="section-card active" id="tab-overview">
                         <h3>帳戶概覽</h3>
                         <div class="grid-2">
-                            <div class="mini-card">
-                                <div class="label">會員等級</div>
-                                <div class="value" id="memberLevelValue" style="font-size:18px">一般會員</div>
-                            </div>
-                            <div class="mini-card">
-                                <div class="label">累積訂單</div>
-                                <div class="value" id="memberOrderCount">0</div>
-                            </div>
-                            <div class="mini-card">
-                                <div class="label">累積消費</div>
-                                <div class="value" id="memberSpent" style="font-size:16px">NT$ 0</div>
-                            </div>
-                            <div class="mini-card">
-                                <div class="label">積分餘額</div>
-                                <div class="value" id="overviewPoints">0</div>
-                            </div>
+                            <div class="mini-card"><div class="label">會員等級</div><div class="value" id="memberLevelValue" style="font-size:18px">一般會員</div></div>
+                            <div class="mini-card"><div class="label">累積訂單</div><div class="value" id="memberOrderCount">0</div></div>
+                            <div class="mini-card"><div class="label">累積消費</div><div class="value" id="memberSpent" style="font-size:16px">NT$ 0</div></div>
+                            <div class="mini-card"><div class="label">積分餘額</div><div class="value" id="overviewPoints">0</div></div>
                         </div>
                         <div style="margin-top:20px">
                             <h4 style="margin:0 0 12px;color:var(--text-dim);font-size:13px;letter-spacing:2px">最近訂單</h4>
                             <table class="order-table">
-                                <thead><tr>
-                                    <th>訂單編號</th><th>日期</th><th>金額</th><th>狀態</th>
-                                </tr></thead>
+                                <thead><tr><th>訂單編號</th><th>日期</th><th>金額</th><th>狀態</th></tr></thead>
                                 <tbody id="overviewOrderBody"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- 我的訂單 -->
                     <div class="section-card" id="tab-orders">
                         <h3>我的訂單</h3>
                         <div style="overflow:auto">
                             <table class="order-table">
-                                <thead><tr>
-                                    <th>訂單編號</th><th>日期</th><th>金額</th><th>付款</th><th>狀態</th><th>詳情</th>
-                                </tr></thead>
+                                <thead><tr><th>訂單編號</th><th>日期</th><th>金額</th><th>付款</th><th>狀態</th><th>詳情</th></tr></thead>
                                 <tbody id="orderTableBody"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- 訂單詳情 -->
                     <div class="section-card" id="tab-order-detail">
                         <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
                             <button class="ghost-btn" onclick="switchMemberTab('orders')" style="padding:8px 14px;font-size:13px">← 返回訂單</button>
@@ -908,19 +886,16 @@
                         <div id="orderDetailContent"></div>
                     </div>
 
-                    <!-- 收藏清單 -->
                     <div class="section-card" id="tab-wishlist">
                         <h3>收藏清單 ❤️</h3>
                         <div id="wishlistGrid"></div>
                     </div>
 
-                    <!-- 優惠券 -->
                     <div class="section-card" id="tab-coupons">
                         <h3>我的優惠券 🎟️</h3>
                         <div class="coupon-grid" id="couponGrid"></div>
                     </div>
 
-                    <!-- 積分 -->
                     <div class="section-card" id="tab-points">
                         <h3>積分中心 ⭐</h3>
                         <div class="points-card">
@@ -931,7 +906,6 @@
                         <div class="points-history" id="pointsHistory"></div>
                     </div>
 
-                    <!-- 地址管理 -->
                     <div class="section-card" id="tab-addresses">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
                             <h3 style="margin:0">地址管理 📍</h3>
@@ -952,7 +926,6 @@
                         </div>
                     </div>
 
-                    <!-- 個人設定 -->
                     <div class="section-card" id="tab-settings">
                         <h3>個人設定 ⚙️</h3>
                         <div class="grid-2" style="margin-bottom:14px">
@@ -978,7 +951,6 @@
                         </div>
                     </div>
 
-                    <!-- 通知中心 -->
                     <div class="section-card" id="tab-notifications">
                         <h3>通知中心 🔔</h3>
                         <div class="notif-list" id="notifList"></div>
@@ -986,6 +958,7 @@
                 </div>
             </div>
         </section>
+
         <!-- Admin Panel -->
         <section class="section" data-view="admin">
             <div class="section-title">
@@ -1010,7 +983,6 @@
                     </div>
                 </aside>
                 <div>
-                    <!-- Dashboard -->
                     <div class="admin-tab-content active" id="atab-dashboard">
                         <div class="admin-stat-grid" id="adminStatGrid">
                             <div class="admin-stat-card"><div class="asl">總訂單數</div><div class="asv" id="aStatOrders">—</div></div>
@@ -1028,7 +1000,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Orders -->
                     <div class="admin-tab-content" id="atab-orders">
                         <div class="panel">
                             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
@@ -1043,7 +1014,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Products -->
                     <div class="admin-tab-content" id="atab-products">
                         <div class="panel">
                             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
@@ -1053,13 +1023,11 @@
                             <div style="overflow-x:auto">
                                 <table class="admin-table">
                                     <thead><tr><th>商品圖示</th><th>商品名稱</th><th>分類</th><th>售價</th><th>評分</th><th>已售</th></tr></thead>
-                                    <tbody id="adminProductsBody">
-                                    </tbody>
+                                    <tbody id="adminProductsBody"></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <!-- Users -->
                     <div class="admin-tab-content" id="atab-users">
                         <div class="panel">
                             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
@@ -1181,7 +1149,6 @@
     <div class="svc-modal" id="svcModal" onclick="onSvcModalClick(event)">
         <div class="svc-sheet" id="svcSheet">
             <div class="svc-handle"></div>
-
             <div class="svc-header">
                 <div class="svc-header-info">
                     <span class="svc-icon-big" id="svcIconBig">📦</span>
@@ -1189,58 +1156,19 @@
                 </div>
                 <button class="svc-close" onclick="closeSvcModal()">✕</button>
             </div>
-
-            <!-- ── Sub-nav tabs ── -->
             <div class="svc-nav" id="svcNav"></div>
-
             <div class="svc-body" id="svcBody">
                 <!-- ════ 如何購物 ════ -->
                 <div class="svc-panel" id="svcPanel-howToBuy">
                     <div class="svc-section">
                         <div class="svc-section-title">購物流程</div>
                         <div class="svc-steps">
-                            <div class="svc-step">
-                                <div class="svc-step-num">1</div>
-                                <div class="svc-step-content">
-                                    <h5>瀏覽商品 / 搜尋</h5>
-                                    <p>透過上方搜尋列輸入關鍵字，或點選商品分類標籤快速篩選。支援品牌名、商品名或分類詞搜尋。</p>
-                                </div>
-                            </div>
-                            <div class="svc-step">
-                                <div class="svc-step-num">2</div>
-                                <div class="svc-step-content">
-                                    <h5>加入購物車</h5>
-                                    <p>在商品卡片點擊「加入購物車」，可自由調整數量。❤️ 圖示可將商品存入收藏清單，方便日後購買。</p>
-                                </div>
-                            </div>
-                            <div class="svc-step">
-                                <div class="svc-step-num">3</div>
-                                <div class="svc-step-content">
-                                    <h5>輸入收件資料</h5>
-                                    <p>前往購物車頁面，填寫收件人姓名、手機、地址。會員可一鍵帶入預設地址，省時又方便。</p>
-                                </div>
-                            </div>
-                            <div class="svc-step">
-                                <div class="svc-step-num">4</div>
-                                <div class="svc-step-content">
-                                    <h5>套用優惠碼</h5>
-                                    <p>若您持有優惠券代碼，在結帳頁輸入代碼後點「套用」即可自動折抵。每筆訂單限用一張。</p>
-                                </div>
-                            </div>
-                            <div class="svc-step">
-                                <div class="svc-step-num">5</div>
-                                <div class="svc-step-content">
-                                    <h5>選擇付款 & 配送方式</h5>
-                                    <p>支援信用卡、行動支付、ATM轉帳、貨到付款。配送可選擇宅配到府、7-ELEVEN 或全家超商取貨。</p>
-                                </div>
-                            </div>
-                            <div class="svc-step">
-                                <div class="svc-step-num">6</div>
-                                <div class="svc-step-content">
-                                    <h5>確認結帳 & 獲得積分</h5>
-                                    <p>按下「確認結帳」後訂單成立。消費金額的 1% 自動回饋積分，會員等級越高回饋比例越高。</p>
-                                </div>
-                            </div>
+                            <div class="svc-step"><div class="svc-step-num">1</div><div class="svc-step-content"><h5>瀏覽商品 / 搜尋</h5><p>透過上方搜尋列輸入關鍵字，或點選商品分類標籤快速篩選。支援品牌名、商品名或分類詞搜尋。</p></div></div>
+                            <div class="svc-step"><div class="svc-step-num">2</div><div class="svc-step-content"><h5>加入購物車</h5><p>在商品卡片點擊「加入購物車」，可自由調整數量。❤️ 圖示可將商品存入收藏清單，方便日後購買。</p></div></div>
+                            <div class="svc-step"><div class="svc-step-num">3</div><div class="svc-step-content"><h5>輸入收件資料</h5><p>前往購物車頁面，填寫收件人姓名、手機、地址。會員可一鍵帶入預設地址，省時又方便。</p></div></div>
+                            <div class="svc-step"><div class="svc-step-num">4</div><div class="svc-step-content"><h5>套用優惠碼</h5><p>若您持有優惠券代碼，在結帳頁輸入代碼後點「套用」即可自動折抵。每筆訂單限用一張。</p></div></div>
+                            <div class="svc-step"><div class="svc-step-num">5</div><div class="svc-step-content"><h5>選擇付款 &amp; 配送方式</h5><p>支援信用卡、行動支付、ATM轉帳、貨到付款。配送可選擇宅配到府、7-ELEVEN 或全家超商取貨。</p></div></div>
+                            <div class="svc-step"><div class="svc-step-num">6</div><div class="svc-step-content"><h5>確認結帳 &amp; 獲得積分</h5><p>按下「確認結帳」後訂單成立。消費金額的 1% 自動回饋積分，會員等級越高回饋比例越高。</p></div></div>
                         </div>
                     </div>
                     <div class="svc-section">
@@ -1254,30 +1182,14 @@
                     </div>
                     <div class="svc-warn">⚠️ 此網站為展示版本，結帳後訂單資料僅儲存於您的瀏覽器本機，不會產生真實交易或出貨行為。</div>
                 </div>
-
                 <!-- ════ 運費說明 ════ -->
                 <div class="svc-panel" id="svcPanel-shipping">
                     <div class="svc-section">
                         <div class="svc-section-title">配送方式與費用</div>
                         <div class="svc-cards">
-                            <div class="svc-card">
-                                <div class="sc-icon">🚚</div>
-                                <div class="sc-name">宅配到府</div>
-                                <div class="sc-price">滿 NT$1,000 免運</div>
-                                <div class="sc-note">未滿 NT$1,000 運費 NT$120<br>預計 1–3 個工作天到貨</div>
-                            </div>
-                            <div class="svc-card">
-                                <div class="sc-icon">🏪</div>
-                                <div class="sc-name">7-ELEVEN 取貨</div>
-                                <div class="sc-price">NT$60</div>
-                                <div class="sc-note">到貨後簡訊通知<br>7 天內取件，逾期退回</div>
-                            </div>
-                            <div class="svc-card">
-                                <div class="sc-icon">🏪</div>
-                                <div class="sc-name">全家取貨</div>
-                                <div class="sc-price">NT$60</div>
-                                <div class="sc-note">到貨後 App 推播通知<br>7 天內取件，逾期退回</div>
-                            </div>
+                            <div class="svc-card"><div class="sc-icon">🚚</div><div class="sc-name">宅配到府</div><div class="sc-price">滿 NT$1,000 免運</div><div class="sc-note">未滿 NT$1,000 運費 NT$120<br>預計 1–3 個工作天到貨</div></div>
+                            <div class="svc-card"><div class="sc-icon">🏪</div><div class="sc-name">7-ELEVEN 取貨</div><div class="sc-price">NT$60</div><div class="sc-note">到貨後簡訊通知<br>7 天內取件，逾期退回</div></div>
+                            <div class="svc-card"><div class="sc-icon">🏪</div><div class="sc-name">全家取貨</div><div class="sc-price">NT$60</div><div class="sc-note">到貨後 App 推播通知<br>7 天內取件，逾期退回</div></div>
                         </div>
                     </div>
                     <div class="svc-section">
@@ -1294,33 +1206,14 @@
                     </div>
                     <div class="svc-warn">⚠️ 配送時程僅供參考，實際到貨時間以物流業者通知為準。颱風、連假等特殊期間可能順延。</div>
                 </div>
-
                 <!-- ════ 退換貨政策 ════ -->
                 <div class="svc-panel" id="svcPanel-returns">
                     <div class="svc-section">
                         <div class="svc-section-title">退貨規定</div>
                         <div class="svc-steps">
-                            <div class="svc-step">
-                                <div class="svc-step-num">7<br><span style="font-size:9px;font-weight:400">天</span></div>
-                                <div class="svc-step-content">
-                                    <h5>鑑賞期保障</h5>
-                                    <p>依消費者保護法，商品到貨起 7 天內（含例假日）可申請退貨，毋須說明原因。超過鑑賞期恕不受理。</p>
-                                </div>
-                            </div>
-                            <div class="svc-step">
-                                <div class="svc-step-num">📦</div>
-                                <div class="svc-step-content">
-                                    <h5>退貨條件</h5>
-                                    <p>商品需維持全新狀態，保留原包裝、吊牌、發票及贈品；若有拆封使用痕跡，將依折舊程度扣款。</p>
-                                </div>
-                            </div>
-                            <div class="svc-step">
-                                <div class="svc-step-num">💰</div>
-                                <div class="svc-step-content">
-                                    <h5>退款時程</h5>
-                                    <p>確認收到退回商品後 5–7 個工作天退款至原付款帳戶；信用卡退款依發卡行帳單週期顯示。</p>
-                                </div>
-                            </div>
+                            <div class="svc-step"><div class="svc-step-num">7<br><span style="font-size:9px;font-weight:400">天</span></div><div class="svc-step-content"><h5>鑑賞期保障</h5><p>依消費者保護法，商品到貨起 7 天內（含例假日）可申請退貨，毋須說明原因。超過鑑賞期恕不受理。</p></div></div>
+                            <div class="svc-step"><div class="svc-step-num">📦</div><div class="svc-step-content"><h5>退貨條件</h5><p>商品需維持全新狀態，保留原包裝、吊牌、發票及贈品；若有拆封使用痕跡，將依折舊程度扣款。</p></div></div>
+                            <div class="svc-step"><div class="svc-step-num">💰</div><div class="svc-step-content"><h5>退款時程</h5><p>確認收到退回商品後 5–7 個工作天退款至原付款帳戶；信用卡退款依發卡行帳單週期顯示。</p></div></div>
                         </div>
                     </div>
                     <div class="svc-section">
@@ -1339,47 +1232,15 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- ════ 會員等級 ════ -->
                 <div class="svc-panel" id="svcPanel-levels">
                     <div class="svc-section">
                         <div class="svc-section-title">等級制度總覽</div>
                         <div class="level-cards">
-                            <div class="lv-card lv-normal">
-                                <div class="lv-icon">🪙</div>
-                                <div><div class="lv-name">一般會員</div><div class="lv-cond">註冊即享，累積消費 0–9,999</div></div>
-                                <div class="lv-perks">
-                                    <div class="lv-perk">1% 積分回饋</div>
-                                    <div class="lv-perk">新會員 200 積分</div>
-                                </div>
-                            </div>
-                            <div class="lv-card lv-silver">
-                                <div class="lv-icon">🥈</div>
-                                <div><div class="lv-name">銀級會員</div><div class="lv-cond">年消費累積 NT$10,000–29,999</div></div>
-                                <div class="lv-perks">
-                                    <div class="lv-perk">1.5% 積分回饋</div>
-                                    <div class="lv-perk">每季 NT$200 折抵券</div>
-                                </div>
-                            </div>
-                            <div class="lv-card lv-gold">
-                                <div class="lv-icon">🥇</div>
-                                <div><div class="lv-name">金級會員</div><div class="lv-cond">年消費累積 NT$30,000–59,999</div></div>
-                                <div class="lv-perks">
-                                    <div class="lv-perk">2% 積分回饋</div>
-                                    <div class="lv-perk">生日雙倍積分</div>
-                                    <div class="lv-perk">專屬優先客服</div>
-                                </div>
-                            </div>
-                            <div class="lv-card lv-vip">
-                                <div class="lv-icon">💎</div>
-                                <div><div class="lv-name">VIP 旗艦</div><div class="lv-cond">年消費累積 NT$60,000 以上</div></div>
-                                <div class="lv-perks">
-                                    <div class="lv-perk">3% 積分回饋</div>
-                                    <div class="lv-perk">每月 NT$500 專屬券</div>
-                                    <div class="lv-perk">免費宅配 無門檻</div>
-                                    <div class="lv-perk">新品搶先體驗</div>
-                                </div>
-                            </div>
+                            <div class="lv-card lv-normal"><div class="lv-icon">🪙</div><div><div class="lv-name">一般會員</div><div class="lv-cond">註冊即享，累積消費 0–9,999</div></div><div class="lv-perks"><div class="lv-perk">1% 積分回饋</div><div class="lv-perk">新會員 200 積分</div></div></div>
+                            <div class="lv-card lv-silver"><div class="lv-icon">🥈</div><div><div class="lv-name">銀級會員</div><div class="lv-cond">年消費累積 NT$10,000–29,999</div></div><div class="lv-perks"><div class="lv-perk">1.5% 積分回饋</div><div class="lv-perk">每季 NT$200 折抵券</div></div></div>
+                            <div class="lv-card lv-gold"><div class="lv-icon">🥇</div><div><div class="lv-name">金級會員</div><div class="lv-cond">年消費累積 NT$30,000–59,999</div></div><div class="lv-perks"><div class="lv-perk">2% 積分回饋</div><div class="lv-perk">生日雙倍積分</div><div class="lv-perk">專屬優先客服</div></div></div>
+                            <div class="lv-card lv-vip"><div class="lv-icon">💎</div><div><div class="lv-name">VIP 旗艦</div><div class="lv-cond">年消費累積 NT$60,000 以上</div></div><div class="lv-perks"><div class="lv-perk">3% 積分回饋</div><div class="lv-perk">每月 NT$500 專屬券</div><div class="lv-perk">免費宅配 無門檻</div><div class="lv-perk">新品搶先體驗</div></div></div>
                         </div>
                     </div>
                     <div class="svc-section">
@@ -1391,16 +1252,10 @@
                     <div class="svc-section">
                         <div class="svc-section-title">共同權益</div>
                         <div class="svc-tag-row">
-                            <div class="svc-tag">生日月 NT$100 折扣</div>
-                            <div class="svc-tag">新品搶先通知</div>
-                            <div class="svc-tag">限定閃購優先資格</div>
-                            <div class="svc-tag">退換貨快速通道</div>
-                            <div class="svc-tag">個人化商品推薦</div>
-                            <div class="svc-tag">訂單物流即時追蹤</div>
+                            <div class="svc-tag">生日月 NT$100 折扣</div><div class="svc-tag">新品搶先通知</div><div class="svc-tag">限定閃購優先資格</div><div class="svc-tag">退換貨快速通道</div><div class="svc-tag">個人化商品推薦</div><div class="svc-tag">訂單物流即時追蹤</div>
                         </div>
                     </div>
                 </div>
-
                 <!-- ════ 積分使用 ════ -->
                 <div class="svc-panel" id="svcPanel-points">
                     <div class="svc-section">
@@ -1435,23 +1290,13 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- ════ 優惠券規則 ════ -->
                 <div class="svc-panel" id="svcPanel-coupons">
                     <div class="svc-section">
                         <div class="svc-section-title">優惠券類型範例</div>
-                        <div class="coupon-preview">
-                            <div class="cp-left"><div class="cp-amount">200</div><div class="cp-unit">折抵券</div></div>
-                            <div class="cp-right"><div class="cp-name">新會員歡迎券</div><div class="cp-rule">滿 NT$1,000 可使用 · 代碼：WELCOME<br>限首次消費使用，不得轉讓</div><div class="cp-expire">有效期限：2026/12/31</div></div>
-                        </div>
-                        <div class="coupon-preview">
-                            <div class="cp-left" style="background:rgba(255,107,107,.1)"><div class="cp-amount" style="color:#ff8f8f">300</div><div class="cp-unit" style="color:#ff8f8f">折抵券</div></div>
-                            <div class="cp-right"><div class="cp-name">夏日折扣券</div><div class="cp-rule">滿 NT$2,000 可使用 · 代碼：SUMMER300<br>適用全館商品，排除已折扣商品</div><div class="cp-expire">有效期限：2026/08/31</div></div>
-                        </div>
-                        <div class="coupon-preview">
-                            <div class="cp-left" style="background:rgba(180,100,255,.1)"><div class="cp-amount" style="color:#c084fc">500</div><div class="cp-unit" style="color:#c084fc">折抵券</div></div>
-                            <div class="cp-right"><div class="cp-name">VIP 專屬券</div><div class="cp-rule">滿 NT$5,000 可使用 · 代碼：VIP500<br>VIP 旗艦會員限定，每月發放一張</div><div class="cp-expire">有效期限：2026/12/31</div></div>
-                        </div>
+                        <div class="coupon-preview"><div class="cp-left"><div class="cp-amount">200</div><div class="cp-unit">折抵券</div></div><div class="cp-right"><div class="cp-name">新會員歡迎券</div><div class="cp-rule">滿 NT$1,000 可使用 · 代碼：WELCOME<br>限首次消費使用，不得轉讓</div><div class="cp-expire">有效期限：2026/12/31</div></div></div>
+                        <div class="coupon-preview"><div class="cp-left" style="background:rgba(255,107,107,.1)"><div class="cp-amount" style="color:#ff8f8f">300</div><div class="cp-unit" style="color:#ff8f8f">折抵券</div></div><div class="cp-right"><div class="cp-name">夏日折扣券</div><div class="cp-rule">滿 NT$2,000 可使用 · 代碼：SUMMER300<br>適用全館商品，排除已折扣商品</div><div class="cp-expire">有效期限：2026/08/31</div></div></div>
+                        <div class="coupon-preview"><div class="cp-left" style="background:rgba(180,100,255,.1)"><div class="cp-amount" style="color:#c084fc">500</div><div class="cp-unit" style="color:#c084fc">折抵券</div></div><div class="cp-right"><div class="cp-name">VIP 專屬券</div><div class="cp-rule">滿 NT$5,000 可使用 · 代碼：VIP500<br>VIP 旗艦會員限定，每月發放一張</div><div class="cp-expire">有效期限：2026/12/31</div></div></div>
                     </div>
                     <div class="svc-section">
                         <div class="svc-section-title">使用規則</div>
@@ -1464,14 +1309,7 @@
                     <div class="svc-section">
                         <div class="svc-section-title">如何獲得優惠券</div>
                         <div class="svc-tag-row">
-                            <div class="svc-tag">🎁 新會員註冊</div>
-                            <div class="svc-tag">🎂 生日當月禮</div>
-                            <div class="svc-tag">📧 電子報訂閱</div>
-                            <div class="svc-tag">🔔 限時活動</div>
-                            <div class="svc-tag">⭐ 積分兌換</div>
-                            <div class="svc-tag">💎 VIP 每月發放</div>
-                            <div class="svc-tag">📣 分享活動</div>
-                            <div class="svc-tag">🛒 消費滿額贈</div>
+                            <div class="svc-tag">🎁 新會員註冊</div><div class="svc-tag">🎂 生日當月禮</div><div class="svc-tag">📧 電子報訂閱</div><div class="svc-tag">🔔 限時活動</div><div class="svc-tag">⭐ 積分兌換</div><div class="svc-tag">💎 VIP 每月發放</div><div class="svc-tag">📣 分享活動</div><div class="svc-tag">🛒 消費滿額贈</div>
                         </div>
                     </div>
                 </div>
@@ -1576,7 +1414,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     async function testConnection(){
-        // 查 products 表（公開可讀），不需登入，避免 users 表 RLS 擋住匿名請求
         try{
             const res = await fetch(
                 SUPA_URL + '/rest/v1/products?select=id&limit=1',
@@ -1587,17 +1424,15 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
                 console.log('✅ Supabase 連線正常');
                 document.getElementById('dbErrorBanner').style.display='none';
             } else {
-                const code = body?.code || String(res.status);
                 const msg  = body?.message || body?.hint || res.statusText || '未知錯誤';
                 if(msg.includes('relation') || res.status===404){
                     showDBError('資料表不存在，請確認 Supabase 中有建立 users、orders、products 資料表。');
                 } else if(res.status!==401 && res.status!==403){
-                    // 401/403 代表 RLS 正常運作（需登入），不算錯誤
                     showDBError('連線失敗：' + msg + ' (HTTP ' + res.status + ')');
                 }
             }
         } catch(e){
-            // 任何網路例外靜默略過，不影響功能
+            // 網路例外靜默略過
         }
     }
 
@@ -1651,11 +1486,10 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     // ─── Auth ───
-    // ✅ 安全修復：防暴力破解 - 追蹤登入失敗次數
     const loginAttempts = {};
     const loginLockoutUntil = {};
     const MAX_LOGIN_ATTEMPTS = 5;
-    const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15分鐘鎖定
+    const LOCKOUT_DURATION_MS = 15 * 60 * 1000;
 
     function checkLoginRateLimit(email){
         const now = Date.now();
@@ -1717,11 +1551,10 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         const ok=validateField('regName')&&validateField('regEmail')&&validateField('regPass');
         if(!ok||!name||!email||!pass){toast('⚠️ 請填寫完整註冊資料');return;}
 
-        // ✅ 安全修復：使用 Supabase Auth 註冊，密碼由 Supabase 加密儲存，不寫入自訂欄位
         const {data:authData, error:authError} = await supa.auth.signUp({
             email,
             password: pass,
-            options: { data: { name } }  // 儲存名字到 auth.users.user_metadata
+            options: { data: { name } }
         });
 
         if(authError){
@@ -1733,9 +1566,8 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             return;
         }
 
-        // ✅ 寫入 public.users 個人資料（不含密碼）
         const newProfile={
-            id: authData.user.id,  // 對應 auth.users.id
+            id: authData.user.id,
             username:name, email, name, phone, address,
             bio:'', birth:'', gender:'',
             level:'一般會員', spent:0, points:200,
@@ -1756,9 +1588,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             return;
         }
 
-        // ✅ Supabase Auth 預設會寄出驗證信（視 Supabase 後台設定而定）
         if(!authData.session){
-            // 需要 email 驗證
             closeAuthModal();
             toast('📧 已寄出驗證信，請到信箱點擊連結後再登入！', 5000);
             return;
@@ -1777,42 +1607,23 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         updateLoginUI();
     }
 
+    // ✅ 修復版 handleLogin：RLS 錯誤時也能正確顯示名字
     async function handleLogin(){
         const email=document.getElementById('loginEmail').value.trim();
         const pass=document.getElementById('loginPass').value.trim();
         if(!email||!pass){toast('⚠️ 請填寫帳號與密碼');return;}
-
-        // ✅ 安全修復：防暴力破解檢查
         if(!checkLoginRateLimit(email)) return;
-
-        // ✅ 安全修復：使用 Supabase Auth 驗證，密碼由 Supabase 安全比對，不直接查資料庫
         const {data:authData, error:authError} = await supa.auth.signInWithPassword({ email, password: pass });
         if(authError||!authData?.user){
             recordLoginFailure(email);
             return;
         }
-
-        // 登入成功，清除失敗記錄
         clearLoginFailure(email);
-
-        // ✅ 從 public.users 取個人資料
+        // ✅ 關鍵修復：先從 auth user_metadata 取名字（註冊時存入），DB 讀取失敗也能正確顯示
+        const metaName = authData.user.user_metadata?.name || email.split('@')[0];
         const {data, error} = await supa.from('users').select('*').eq('id', authData.user.id).maybeSingle();
-        if(error||!data){
-            // 如果個人資料不存在（例如舊帳號），自動建立
-            const fallbackProfile = {
-                id: authData.user.id,
-                username: email.split('@')[0], name: email.split('@')[0], email,
-                level:'一般會員', spent:0, points:0,
-                is_admin: false,
-                coupons: JSON.stringify(defaultCoupons),
-                addresses: JSON.stringify([]),
-                points_history: JSON.stringify([])
-            };
-            const {data: inserted} = await supa.from('users').insert([fallbackProfile]).select().single();
-            if(inserted) {
-                user = { ...inserted, avatar: inserted.name?.slice(0,2).toUpperCase()||'PM', coupons: defaultCoupons, addresses: [], pointsHistory: [] };
-            }
-        } else {
+        if(data && !error){
+            // ✅ 正常：成功從 users 資料表取得資料
             user={
                 ...data,
                 avatar:(data.name||data.username||'PM').slice(0,2).toUpperCase(),
@@ -1820,17 +1631,44 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
                 addresses: typeof data.addresses==='string'?JSON.parse(data.addresses):data.addresses||[],
                 pointsHistory: typeof data.points_history==='string'?JSON.parse(data.points_history):data.points_history||[],
             };
+        } else if(!data && !error){
+            // 資料不存在（舊帳號），嘗試新增
+            const fallbackProfile = {
+                id: authData.user.id,
+                username: metaName, name: metaName, email,
+                level:'一般會員', spent:0, points:0,
+                is_admin: false,
+                coupons: JSON.stringify(defaultCoupons),
+                addresses: JSON.stringify([]),
+                points_history: JSON.stringify([])
+            };
+            const {data: inserted} = await supa.from('users').insert([fallbackProfile]).select().single();
+            if(inserted){
+                user = { ...inserted, avatar: inserted.name?.slice(0,2).toUpperCase()||'PM', coupons: defaultCoupons, addresses: [], pointsHistory: [] };
+            } else {
+                // INSERT 失敗（可能是重複），用 auth metadata 建立暫時 user
+                user = {
+                    id: authData.user.id, name: metaName, username: metaName, email,
+                    avatar: metaName.slice(0,2).toUpperCase(),
+                    level:'一般會員', spent:0, points:0, is_admin:false,
+                    coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
+                };
+            }
+        } else {
+            // ✅ RLS 或其他 DB 錯誤：用 auth user_metadata 建立暫時 user（名字會正確）
+            console.warn('users SELECT failed:', error?.message);
+            user = {
+                id: authData.user.id, name: metaName, username: metaName, email,
+                avatar: metaName.slice(0,2).toUpperCase(),
+                level:'一般會員', spent:0, points:0, is_admin:false,
+                coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
+            };
         }
-
-        // ✅ 如果是管理員，自動開啟管理員模式
         if(user?.is_admin){ isAdminLoggedIn = true; }
-
         saveJSON(userKey,user);
         updateMemberUI();syncMemberForm();closeAuthModal();
         toast('👋 歡迎回來，'+(user?.name||email)+'！');
         updateLoginUI();
-
-        // 同步該會員的訂單（✅ 用 auth.uid() 過濾，只看自己的）
         if(user?.id){
             const {data:userOrders}=await supa.from('orders').select('*').eq('user_id', user.id).order('created_at',{ascending:false});
             if(userOrders&&userOrders.length>0){
@@ -1846,7 +1684,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     async function logout(){
-        await supa.auth.signOut(); // ✅ 安全修復：清除 Supabase session
+        await supa.auth.signOut();
         user=null;
         isAdminLoggedIn=false;
         localStorage.removeItem(userKey);
@@ -1871,7 +1709,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         if(!user){toast('請先登入');return;}
         if(n1.length<8){toast('❌ 新密碼需至少8個字元');return;}
         if(n1!==n2){toast('❌ 兩次密碼不一致');return;}
-        // ✅ 安全修復：透過 Supabase Auth 更新密碼，加密在伺服器端處理
         const {error} = await supa.auth.updateUser({ password: n1 });
         if(error){ toast('❌ 密碼更新失敗：'+error.message); return; }
         document.getElementById('changePassModal').style.display='none';
@@ -2076,8 +1913,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         const orderId='#PT-'+Math.floor(10000+Math.random()*90000);
         const earnedPoints=Math.floor(total/100);
 
-        // Mark coupon used
-        const appliedCouponDiscount = couponDiscount; // ✅ 在歸零前先儲存
+        const appliedCouponDiscount = couponDiscount;
         if(couponDiscount>0&&user){
             const code=document.getElementById('couponInput').value.trim().toUpperCase();
             const c=(user.coupons||[]).find(c=>c.code===code);
@@ -2085,18 +1921,16 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         }
         couponDiscount=0;
 
-        // ── 寫入 Supabase orders ──
-        // ✅ 安全修復：user_id 從 Supabase Auth 取得，不從 localStorage 取
         const {data:{user:authUser}} = await supa.auth.getUser();
         const orderPayload={
             id: orderId,
-            user_id: authUser?.id || null, // ✅ 從 Supabase Auth 取得真實 user_id
+            user_id: authUser?.id || null,
             recipient_name: name,
             recipient_phone: phone,
             recipient_address: address,
             payment, shipping,
             subtotal, shipping_fee: shippingFee,
-            discount: levelDiscount+appliedCouponDiscount, // ✅ 使用正確折扣值
+            discount: levelDiscount+appliedCouponDiscount,
             total, status:'處理中',
             items: cart.map(i=>({...i}))
         };
@@ -2116,7 +1950,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         orders.unshift(newOrder);
         saveJSON(ordersKey,orders);
 
-        // ── 更新會員資料 ──
         if(!user)user={name,email:'',phone,address,avatar:name.slice(0,2).toUpperCase(),level:'一般會員',spent:0,orders:0,points:0,coupons:[...defaultCoupons],addresses:[{name,phone,address,isDefault:true}],pointsHistory:[]};
         user.orders=(user.orders||0)+1;
         user.spent=(user.spent||0)+total;
@@ -2129,7 +1962,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         else user.level='一般會員';
         saveJSON(userKey,user);
 
-        // ── 同步更新 Supabase users ──
         if(user.id){
             await supa.from('users').update({
                 spent: user.spent,
@@ -2168,7 +2000,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         document.getElementById('overviewPoints').textContent=has?(user.points||0):0;
         document.getElementById('heroMemberBtn').textContent=has?'我的會員中心':'成為會員';
 
-        // Level progress bar
         const spent=has?(user.spent||0):0;
         let nextTarget=10000,currentBase=0;
         if(spent>=50000){nextTarget=50000;currentBase=50000;}
@@ -2179,7 +2010,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         document.getElementById('levelProgressFill').style.width=pct+'%';
         document.getElementById('levelProgressLabel').textContent=`${money(spent)} / ${money(nextTarget)}`;
 
-        // Orders table (overview + orders tab)
         const orderRow=o=>`<tr>
             <td data-label="訂單編號">${o.id}</td>
             <td data-label="日期">${o.date}</td>
@@ -2238,7 +2068,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             }
         `;
         switchMemberTab('order-detail');
-        // Make sure the tab card is shown
         document.getElementById('tab-order-detail').classList.add('active');
     }
 
@@ -2270,7 +2099,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         user.bio=document.getElementById('memberFormBio').value.trim();
         user.avatar=(user.name||'PM').slice(0,2).toUpperCase();
         saveJSON(userKey,user);
-        // 同步到 Supabase
         if(user.id){
             await supa.from('users').update({
                 name:user.name, username:user.username, email:user.email,
@@ -2406,10 +2234,8 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         if(!cfg) return;
         document.getElementById('svcIconBig').textContent = cfg.icon;
         document.getElementById('svcTitle').textContent = cfg.title;
-        // build nav
         const nav = document.getElementById('svcNav');
         nav.innerHTML = cfg.tabs.map(t=>`<button class="svc-nav-btn${t.key===type?' active':''}" onclick="switchSvcTab('${t.key}')">${t.label}</button>`).join('');
-        // show panels
         document.querySelectorAll('.svc-panel').forEach(p=>p.classList.remove('active'));
         const panel = document.getElementById('svcPanel-'+type);
         if(panel) panel.classList.add('active');
@@ -2437,7 +2263,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     // ─── Admin Panel ───
-    // ✅ 安全修復：移除前端硬編碼密碼，改用 Supabase users.is_admin 欄位驗證
     let isAdminLoggedIn = false;
 
     function openAdminLogin(){
@@ -2453,7 +2278,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         toast('❌ 您沒有後台管理員權限');
     }
 
-    // 保留 modal 相關 HTML 但不再使用密碼比對
     function verifyAdminPass(){ openAdminLogin(); }
 
     function logoutAdmin(){
@@ -2475,15 +2299,12 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     }
 
     async function loadAdminDashboard(){
-        // Stats
         document.getElementById('aStatProducts').textContent = products.length;
-        // Orders stats
         const {data:allOrders} = await supa.from('orders').select('id,total,status,recipient_name,created_at,payment').order('created_at',{ascending:false});
         if(allOrders){
             document.getElementById('aStatOrders').textContent = allOrders.length;
             const revenue = allOrders.reduce((s,o)=>s+(o.total||0),0);
             document.getElementById('aStatRevenue').textContent = 'NT$ '+revenue.toLocaleString('zh-TW');
-            // Recent 10 orders table
             document.getElementById('adminRecentOrdersBody').innerHTML = allOrders.slice(0,10).map(o=>`
                 <tr>
                     <td style="font-family:monospace;color:var(--accent-gold)">${o.id}</td>
@@ -2497,7 +2318,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             document.getElementById('aStatOrders').textContent = '—';
             document.getElementById('aStatRevenue').textContent = '—';
         }
-        // Users stats
         const {data:allUsers} = await supa.from('users').select('id').limit(1000);
         document.getElementById('aStatUsers').textContent = allUsers ? allUsers.length : '—';
     }
@@ -2533,14 +2353,11 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         const {error} = await supa.from('orders').update({status: newStatus}).eq('id', orderId);
         if(error){ toast('❌ 更新失敗：'+error.message); return; }
         toast(`✅ 訂單 ${orderId} 狀態已更新為「${newStatus}」`);
-        // If this is current user's order, sync locally
         const local = orders.find(o=>o.id===orderId);
         if(local){ local.status=newStatus; saveJSON(ordersKey,orders); }
     }
 
     function loadAdminProducts(){
-        // Products are local, already rendered in HTML via template literal
-        // Re-render in case products changed
         document.getElementById('adminProductsBody').innerHTML = products.map(p=>`
             <tr>
                 <td style="font-size:24px">${p.img}</td>
@@ -2581,15 +2398,15 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
         document.getElementById('statOrders').textContent=orders.length;
     }
 
+    // ✅ 修復版 boot：RLS 錯誤時也能正確顯示名字
     async function boot(){
         cart=loadJSON(cartKey,[]);
         wishlist=loadJSON(wishlistKey,[]);
-
-        // ✅ 安全修復：從 Supabase Auth 恢復登入狀態（不依賴 localStorage 的 user 資料）
         const {data:{user:authUser}} = await supa.auth.getUser();
         if(authUser){
-            const {data:profile} = await supa.from('users').select('*').eq('id', authUser.id).maybeSingle();
-            if(profile){
+            const metaName = authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'PM';
+            const {data:profile, error} = await supa.from('users').select('*').eq('id', authUser.id).maybeSingle();
+            if(profile && !error){
                 user = {
                     ...profile,
                     avatar:(profile.name||profile.username||'PM').slice(0,2).toUpperCase(),
@@ -2599,12 +2416,20 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
                 };
                 saveJSON(userKey, user);
                 if(user.is_admin) isAdminLoggedIn = true;
+            } else {
+                // ✅ RLS 擋住或找不到，用 auth metadata 建立暫時 user
+                console.warn('boot: users read failed:', error?.message||'no data');
+                user = {
+                    id: authUser.id, name: metaName, username: metaName,
+                    email: authUser.email,
+                    avatar: metaName.slice(0,2).toUpperCase(),
+                    level:'一般會員', spent:0, points:0, is_admin:false,
+                    coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
+                };
             }
         } else {
             user = null;
         }
-
-        // ── 載入訂單（優先從 Supabase，用 auth.uid() 過濾）──
         if(user){
             const {data:dbOrders} = await supa.from('orders').select('*').eq('user_id', user.id).order('created_at',{ascending:false});
             if(dbOrders&&dbOrders.length>0){
@@ -2622,8 +2447,6 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
                 {id:'#PT-88102',date:'2026/04/15',amount:4500,status:'已完成',payment:'行動支付',items:[]},
             ]);
         }
-
-        // ── 首次啟動：把商品資料匯入 Supabase ──
         const {data:existingProducts}=await supa.from('products').select('id').limit(1);
         if(!existingProducts||existingProducts.length===0){
             const productRows=products.map(p=>({
@@ -2636,9 +2459,8 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             await supa.from('products').insert(productRows);
             toast('✅ 商品資料已同步至資料庫');
         }
-
         renderAll();
-        await testConnection(); // ✅ 在所有初始化完成後才檢查連線，避免 race condition
+        await testConnection();
     }
 
     window.addEventListener('click',e=>{
