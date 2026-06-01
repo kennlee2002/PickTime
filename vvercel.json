@@ -1,0 +1,1 @@
+items: cart.map(i=>({...i}))  // ✅ 直接傳物件，Supabase 自動處理
