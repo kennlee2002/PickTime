@@ -2265,8 +2265,24 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     // ─── Admin Panel ───
     let isAdminLoggedIn = false;
 
-    async function openAdminLogin(){
+  async function openAdminLogin(){
     if(!user){ toast('🔐 請先登入才能進入後台'); openAuthModal('login'); return; }
+    
+    // 直接讀 Supabase Auth metadata，完全不碰 users 資料表
+    const {data:{user:authUser}} = await supa.auth.getUser();
+    const isAdmin = authUser?.user_metadata?.is_admin === true || user.is_admin === true;
+    
+    if(isAdmin){
+        user.is_admin = true;
+        isAdminLoggedIn = true;
+        document.getElementById('navAdminBtn').style.color='var(--accent-gold)';
+        document.getElementById('navAdminBtn').style.borderColor='var(--accent-gold)';
+        showView('admin');
+        loadAdminDashboard();
+    } else {
+        toast('❌ 您沒有後台管理員權限');
+    }
+}
     
     // 每次都重新從資料庫確認，不用快取值
     const {data} = await supa.from('users')
