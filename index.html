@@ -2265,18 +2265,26 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
     // ─── Admin Panel ───
     let isAdminLoggedIn = false;
 
-    function openAdminLogin(){
-        if(!user){ toast('🔐 請先登入才能進入後台'); openAuthModal('login'); return; }
-        if(user.is_admin){
-            isAdminLoggedIn = true;
-            document.getElementById('navAdminBtn').style.color='var(--accent-gold)';
-            document.getElementById('navAdminBtn').style.borderColor='var(--accent-gold)';
-            showView('admin');
-            loadAdminDashboard();
-            return;
-        }
+    async function openAdminLogin(){
+    if(!user){ toast('🔐 請先登入才能進入後台'); openAuthModal('login'); return; }
+    
+    // 每次都重新從資料庫確認，不用快取值
+    const {data} = await supa.from('users')
+        .select('is_admin')
+        .eq('id', user.id)
+        .single();
+    
+    if(data?.is_admin === true){
+        user.is_admin = true;
+        isAdminLoggedIn = true;
+        document.getElementById('navAdminBtn').style.color = 'var(--accent-gold)';
+        document.getElementById('navAdminBtn').style.borderColor = 'var(--accent-gold)';
+        showView('admin');
+        loadAdminDashboard();
+    } else {
         toast('❌ 您沒有後台管理員權限');
     }
+}
 
     function verifyAdminPass(){ openAdminLogin(); }
 
