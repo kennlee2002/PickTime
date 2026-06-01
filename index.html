@@ -2443,13 +2443,15 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;`;
             } else {
                 // ✅ RLS 擋住或找不到，用 auth metadata 建立暫時 user
                 console.warn('boot: users read failed:', error?.message||'no data');
-                user = {
-                    id: authUser.id, name: metaName, username: metaName,
-                    email: authUser.email,
-                    avatar: metaName.slice(0,2).toUpperCase(),
-                    level:'一般會員', spent:0, points:0, is_admin:false,
-                    coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
-                };
+               // 找到這段（約在 boot 函式裡的 else 分支）
+user = {
+    id: authUser.id, name: metaName, username: metaName,
+    email: authUser.email,
+    avatar: metaName.slice(0,2).toUpperCase(),
+    level:'一般會員', spent:0, points:0, 
+    is_admin: authUser.user_metadata?.is_admin === true,  // ← 這行換掉原本的 is_admin:false
+    coupons:[...defaultCoupons], addresses:[], pointsHistory:[]
+};
             }
         } else {
             user = null;
