@@ -868,6 +868,25 @@ font-size:11px;
 color:var(--text-dim);
 margin-top:4px}
 
+
+        .bank-payment-box{
+            display:none;
+            border:1px solid rgba(196,164,132,.28);
+            background:rgba(196,164,132,.07);
+            border-radius:16px;
+            padding:14px;
+            font-size:13px;
+            line-height:1.7;
+        }
+        .bank-payment-box.show{display:block}
+        .bank-payment-box strong{color:var(--accent-gold)}
+        .bank-payment-box .bank-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(255,255,255,.06);padding:5px 0}
+        .bank-payment-box .bank-row:last-child{border-bottom:none}
+        .bank-payment-box .copy-btn{padding:6px 10px;border-radius:10px;font-size:12px;margin-left:6px}
+        .payment-status-paid{background:rgba(74,222,128,.14);color:#4ade80}
+        .payment-status-pending{background:rgba(250,204,21,.14);color:#fde047}
+        .payment-status-unpaid{background:rgba(255,107,107,.14);color:#ffb4b4}
+
         /* Cart */
         .content-grid{
 display:grid;
@@ -4497,12 +4516,20 @@ font-size:48px}
                 <input id="recipientName" placeholder="收件人姓名 *" />
                 <input id="recipientPhone" placeholder="手機號碼 *" />
                 <input id="recipientAddress" placeholder="收件地址 *" />
-                <select id="paymentMethod">
+                <select id="paymentMethod" onchange="toggleBankTransferBox()">
                     <option value="貨到付款">💵 貨到付款</option>
-                    <option value="信用卡">💳 信用卡</option>
-                    <option value="行動支付">📱 行動支付</option>
-                    <option value="ATM轉帳">🏦 ATM 轉帳</option>
+                    <option value="信用卡">💳 信用卡（展示版，不會真的扣款）</option>
+                    <option value="行動支付">📱 行動支付（展示版，不會真的扣款）</option>
+                    <option value="ATM轉帳">🏦 ATM / 銀行轉帳（需人工對帳）</option>
                 </select>
+                <div class="bank-payment-box" id="bankPaymentBox">
+                    <strong>🏦 銀行轉帳說明</strong>
+                    <div class="bank-row"><span>銀行</span><span>中國信託 822</span></div>
+                    <div class="bank-row"><span>帳號</span><span><code id="bankAccountNo">1234-5678-9012</code> <button type="button" class="ghost-btn copy-btn" onclick="copyBankAccount()">複製</button></span></div>
+                    <div class="bank-row"><span>戶名</span><span>Picktime 拾光機 專題展示</span></div>
+                    <p class="hint" style="margin:8px 0 10px">目前這是「人工轉帳流程」：系統不會真的連銀行扣款，只會建立待付款訂單。付款後請填轉帳後五碼，後台再人工確認為已付款。</p>
+                    <input id="bankLast5" maxlength="5" inputmode="numeric" placeholder="轉帳帳號後五碼 / 匯款備註（ATM轉帳必填）" />
+                </div>
                 <select id="shippingMethod" onchange="updateShipping()">
                     <option value="home">🚚 宅配到府（滿$1000免運）</option>
                     <option value="711">🏪 7-ELEVEN 取貨（NT$60）</option>
@@ -5227,7 +5254,7 @@ font-size:48px}
                         <button class="ghost-btn" onclick="loadAdminOrders()" style="padding:9px 16px;font-size:13px">🔄 重新整理</button>
                     </div>
                     <div style="overflow-x:auto">
-                        <table class="admin-table"><thead><tr><th>訂單編號</th><th>日期</th><th>收件人</th><th>金額</th><th>付款</th><th>狀態</th><th>操作</th></tr></thead><tbody id="adminOrdersBody"><tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr></tbody></table>
+                        <table class="admin-table"><thead><tr><th>訂單編號</th><th>日期</th><th>收件人</th><th>金額</th><th>付款方式</th><th>付款狀態</th><th>轉帳後五碼</th><th>出貨狀態</th></tr></thead><tbody id="adminOrdersBody"><tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr></tbody></table>
                     </div>
                 </div>
             </div>
@@ -5904,7 +5931,7 @@ async function handleLogin(){
     if(user?.is_admin)isAdminLoggedIn=true;
     saveJSON(userKey,user);updateMemberUI();syncMemberForm();closeAuthModal();
     toast('👋 歡迎回來，'+(user?.name||email)+'！');updateLoginUI();
-    if(user?.id){const {data:uo}=await supa.from('orders').select('*').eq('user_id',user.id).order('created_at',{ascending:false});if(uo&&uo.length>0){orders=uo.map(o=>({id:o.id,date:o.created_at?.slice(0,10).replace(/-/g,'/'),amount:o.total,status:o.status,payment:o.payment,items:typeof o.items==='string'?JSON.parse(o.items):o.items||[]}));saveJSON(ordersKey,orders);updateMemberUI();}}
+    if(user?.id){const {data:uo}=await supa.from('orders').select('*').eq('user_id',user.id).order('created_at',{ascending:false});if(uo&&uo.length>0){orders=uo.map(o=>({id:o.id,date:o.created_at?.slice(0,10).replace(/-/g,'/'),amount:o.total,status:o.status,payment:o.payment,paymentStatus:o.payment_status,paymentLast5:o.payment_last5,items:typeof o.items==='string'?JSON.parse(o.items):o.items||[]}));saveJSON(ordersKey,orders);updateMemberUI();}}
 }
 
 async function logout(){await supa.auth.signOut();user=null;isAdminLoggedIn=false;localStorage.removeItem(userKey);updateMemberUI();updateLoginUI();showView('home');toast('已成功登出');}
@@ -5994,12 +6021,29 @@ function renderCart(){
 }
 function updateCartBadge(){document.getElementById('cartCount').textContent=cart.reduce((s,i)=>s+i.qty,0);}
 
+function toggleBankTransferBox(){
+    const method=document.getElementById('paymentMethod')?.value;
+    const box=document.getElementById('bankPaymentBox');
+    if(box)box.classList.toggle('show',method==='ATM轉帳');
+}
+function copyBankAccount(){
+    const account=document.getElementById('bankAccountNo')?.textContent||'';
+    if(!account)return;
+    navigator.clipboard?.writeText(account).then(()=>toast('✅ 已複製銀行帳號')).catch(()=>toast('帳號：'+account));
+}
+function paymentStatusClass(status){
+    if(status==='已付款')return 'payment-status-paid';
+    if(status==='待付款')return 'payment-status-pending';
+    return 'payment-status-unpaid';
+}
 async function checkout(){
     if(!user){toast('⚠️ 請先登入才能結帳');openAuthModal('login');return;}
     if(cart.length===0){toast('⚠️ 購物車是空的');return;}
     const name=document.getElementById('recipientName').value.trim(),phone=document.getElementById('recipientPhone').value.trim(),address=document.getElementById('recipientAddress').value.trim();
     const payment=document.getElementById('paymentMethod').value,shipping=document.getElementById('shippingMethod').value;
+    const bankLast5=(document.getElementById('bankLast5')?.value||'').trim();
     if(!name||!phone||!address){toast('⚠️ 請填寫收件人資料');return;}
+    if(payment==='ATM轉帳'&&!/^\d{5}$/.test(bankLast5)){toast('⚠️ ATM / 銀行轉帳請填 5 位數轉帳後五碼');return;}
     const subtotal=cart.reduce((s,i)=>s+i.price*i.qty,0);
     const sf=shipping==='711'||shipping==='family'?60:(subtotal>=1000?0:100);
     const ld=subtotal>=10000?300:0;
@@ -6007,13 +6051,15 @@ async function checkout(){
     const orderId='#PT-'+Math.floor(10000+Math.random()*90000);
     const earnedPoints=Math.floor(total/100);
     const acd=couponDiscount;
+    const paymentStatus=payment==='ATM轉帳'?'待付款':(payment==='貨到付款'?'貨到付款':'未串接金流');
+    const status=payment==='ATM轉帳'?'待付款':'處理中';
     if(couponDiscount>0&&user){const code=document.getElementById('couponInput').value.trim().toUpperCase();const c=(user.coupons||[]).find(c=>c.code===code);if(c)c.used=true;}
     couponDiscount=0;
     const {data:{user:authUser}}=await supa.auth.getUser();
-    const op={id:orderId,user_id:authUser?.id||null,recipient_name:name,recipient_phone:phone,recipient_address:address,payment,shipping,subtotal,shipping_fee:sf,discount:ld+acd,total,status:'處理中',items:cart.map(i=>({...i}))};
+    const op={id:orderId,user_id:authUser?.id||null,recipient_name:name,recipient_phone:phone,recipient_address:address,payment,payment_status:paymentStatus,payment_last5:bankLast5||null,payment_note:payment==='ATM轉帳'?'等待後台人工對帳確認':null,shipping,subtotal,shipping_fee:sf,discount:ld+acd,total,status,items:cart.map(i=>({...i}))};
     const {error:oe}=await supa.from('orders').insert([op]);
     if(oe){if(oe.code==='42501'||oe.code==='PGRST301'){toast('⚠️ 訂單無法儲存（RLS 未設定）');showDBError('RLS 未設定');}else toast('⚠️ 訂單儲存失敗：'+oe.message);return;}
-    const no={id:orderId,date:today(),amount:total,status:'處理中',payment,shipping,items:cart.map(i=>({...i}))};
+    const no={id:orderId,date:today(),amount:total,status,payment,paymentStatus,paymentLast5:bankLast5,shipping,items:cart.map(i=>({...i}))};
     orders.unshift(no);saveJSON(ordersKey,orders);
     user.orders=(user.orders||0)+1;user.spent=(user.spent||0)+total;user.points=(user.points||0)+earnedPoints;
     if(!user.pointsHistory)user.pointsHistory=[];
@@ -6022,7 +6068,9 @@ async function checkout(){
     saveJSON(userKey,user);
     if(user.id){await supa.from('users').update({spent:user.spent,points:user.points,level:user.level,points_history:JSON.stringify(user.pointsHistory),coupons:JSON.stringify(user.coupons)}).eq('id',user.id);}
     cart=[];saveJSON(cartKey,cart);updateCartBadge();renderCart();updateMemberUI();syncMemberForm();
-    toast(`🎉 訂單成立！${orderId}  回饋 ${earnedPoints} 積分`);
+    document.getElementById('bankLast5')&&(document.getElementById('bankLast5').value='');toggleBankTransferBox();
+    if(payment==='ATM轉帳')toast(`🏦 訂單成立！${orderId} 目前為待付款，請等待後台人工對帳`,5000);
+    else toast(`🎉 訂單成立！${orderId}  回饋 ${earnedPoints} 積分`);
     setTimeout(()=>showView('member'),800);
 }
 
@@ -6056,7 +6104,7 @@ function showOrderDetail(id){
     const o=orders.find(o=>o.id===id);if(!o)return;
     document.getElementById('orderDetailTitle').textContent=`訂單 ${o.id}`;
     const items=o.items||[];
-    document.getElementById('orderDetailContent').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px"><div class="mini-card"><div class="label">訂單日期</div><div style="font-size:15px;font-weight:700;margin-top:8px">${o.date}</div></div><div class="mini-card"><div class="label">狀態</div><div style="margin-top:8px"><span class="tag ${statusClass(o.status)}">${o.status}</span></div></div><div class="mini-card"><div class="label">付款方式</div><div style="font-size:14px;font-weight:700;margin-top:8px">${o.payment||'—'}</div></div><div class="mini-card"><div class="label">訂單金額</div><div class="value" style="font-size:18px">${money(o.amount)}</div></div></div><h4 style="margin:0 0 10px;color:var(--text-dim);font-size:13px;letter-spacing:2px">購買商品${items.length>0?' ('+items.length+'件)':''}</h4>${items.length>0?`<div class="order-items-list">${items.map(i=>`<div class="order-item-row"><div class="order-item-emoji">${productMedia(i)}</div><div class="order-item-info"><div class="order-item-name">${i.name}</div><div class="order-item-sub">${i.category}${i.selectedVariant?' · '+i.selectedVariant:''} · 數量：${i.qty}</div></div><div class="order-item-price">${money(i.price*i.qty)}</div></div>`).join('')}</div>`:'<p style="color:var(--text-dim);font-size:13px">（舊版訂單，無商品詳情）</p>'}`;
+    document.getElementById('orderDetailContent').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px"><div class="mini-card"><div class="label">訂單日期</div><div style="font-size:15px;font-weight:700;margin-top:8px">${o.date}</div></div><div class="mini-card"><div class="label">狀態</div><div style="margin-top:8px"><span class="tag ${statusClass(o.status)}">${o.status}</span></div></div><div class="mini-card"><div class="label">付款方式</div><div style="font-size:14px;font-weight:700;margin-top:8px">${o.payment||'—'}</div></div><div class="mini-card"><div class="label">付款狀態</div><div style="margin-top:8px"><span class="tag ${paymentStatusClass(o.paymentStatus||o.payment_status||'—')}">${o.paymentStatus||o.payment_status||'—'}</span></div>${o.paymentLast5||o.payment_last5?`<div class="hint" style="margin-top:6px">後五碼：${o.paymentLast5||o.payment_last5}</div>`:''}</div><div class="mini-card"><div class="label">訂單金額</div><div class="value" style="font-size:18px">${money(o.amount)}</div></div></div><h4 style="margin:0 0 10px;color:var(--text-dim);font-size:13px;letter-spacing:2px">購買商品${items.length>0?' ('+items.length+'件)':''}</h4>${items.length>0?`<div class="order-items-list">${items.map(i=>`<div class="order-item-row"><div class="order-item-emoji">${productMedia(i)}</div><div class="order-item-info"><div class="order-item-name">${i.name}</div><div class="order-item-sub">${i.category}${i.selectedVariant?' · '+i.selectedVariant:''} · 數量：${i.qty}</div></div><div class="order-item-price">${money(i.price*i.qty)}</div></div>`).join('')}</div>`:'<p style="color:var(--text-dim);font-size:13px">（舊版訂單，無商品詳情）</p>'}`;
     switchMemberTab('order-detail');document.getElementById('tab-order-detail').classList.add('active');
 }
 function syncMemberForm(){document.getElementById('memberFormName').value=user?.name||'';document.getElementById('memberFormUsername').value=user?.username||'';document.getElementById('memberFormEmail').value=user?.email||'';document.getElementById('memberFormPhone').value=user?.phone||'';document.getElementById('memberFormAddress').value=user?.address||'';document.getElementById('memberFormBirth').value=user?.birth||'';document.getElementById('memberFormGender').value=user?.gender||'';document.getElementById('memberFormBio').value=user?.bio||'';if(user){document.getElementById('recipientName').value=user.name||'';document.getElementById('recipientPhone').value=user.phone||'';document.getElementById('recipientAddress').value=user.address||'';}}
@@ -6086,7 +6134,23 @@ function enterAdmin(){isAdminLoggedIn=true;document.getElementById('navAdminBtn'
 function logoutAdmin(){isAdminLoggedIn=false;document.getElementById('navAdminBtn').style.color='';showView('home');toast('已登出後台');}
 function switchAdminTab(tab){document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('atab-'+tab).classList.add('active');document.querySelectorAll('[data-atab]').forEach(b=>b.classList.toggle('active',b.dataset.atab===tab));if(tab==='dashboard')loadAdminDashboard();else if(tab==='orders')loadAdminOrders();else if(tab==='products')loadAdminProducts();else if(tab==='users')loadAdminUsers();}
 async function loadAdminDashboard(){document.getElementById('aStatProducts').textContent=products.length;const {data:ao}=await supa.from('orders').select('id,total,status,recipient_name,created_at,payment').order('created_at',{ascending:false});if(ao){document.getElementById('aStatOrders').textContent=ao.length;document.getElementById('aStatRevenue').textContent='NT$ '+ao.reduce((s,o)=>s+(o.total||0),0).toLocaleString('zh-TW');document.getElementById('adminRecentOrdersBody').innerHTML=ao.slice(0,10).map(o=>`<tr><td style="font-family:monospace;color:var(--accent-gold)">${o.id}</td><td>${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td><span class="tag ${statusClass(o.status)}">${o.status}</span></td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--text-dim)">無訂單</td></tr>';}const {data:au}=await supa.from('users').select('id').limit(1000);document.getElementById('aStatUsers').textContent=au?au.length:'—';}
-async function loadAdminOrders(){document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr>';const {data:ao,error}=await supa.from('orders').select('*').order('created_at',{ascending:false});if(error||!ao){document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="7" style="color:#ff8f8f;padding:20px;text-align:center">載入失敗</td></tr>';return;}document.getElementById('adminOrdersBody').innerHTML=ao.length?ao.map(o=>`<tr><td style="font-family:monospace;font-size:12px;color:var(--accent-gold)">${o.id}</td><td style="font-size:12px">${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td style="font-size:12px">${o.payment||'—'}</td><td><select onchange="updateAdminOrderStatus('${o.id}',this.value)"><option value="處理中" ${o.status==='處理中'?'selected':''}>處理中</option><option value="配送中" ${o.status==='配送中'?'selected':''}>配送中</option><option value="已完成" ${o.status==='已完成'?'selected':''}>已完成</option><option value="已取消" ${o.status==='已取消'?'selected':''}>已取消</option></select></td><td><span class="tag ${statusClass(o.status)}">${o.status}</span></td></tr>`).join(''):'<tr><td colspan="7" style="text-align:center;color:var(--text-dim)">無訂單資料</td></tr>';}
+async function loadAdminOrders(){
+    document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr>';
+    const {data:ao,error}=await supa.from('orders').select('*').order('created_at',{ascending:false});
+    if(error||!ao){document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="8" style="color:#ff8f8f;padding:20px;text-align:center">載入失敗，請檢查 orders 資料表與 RLS 權限</td></tr>';return;}
+    document.getElementById('adminOrdersBody').innerHTML=ao.length?ao.map(o=>{
+        const ps=o.payment_status||((o.payment==='ATM轉帳')?'待付款':'—');
+        return `<tr><td style="font-family:monospace;font-size:12px;color:var(--accent-gold)">${o.id}</td><td style="font-size:12px">${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td style="font-size:12px">${o.payment||'—'}</td><td><select onchange="updateAdminPaymentStatus('${o.id}',this.value)"><option value="待付款" ${ps==='待付款'?'selected':''}>待付款</option><option value="已付款" ${ps==='已付款'?'selected':''}>已付款</option><option value="貨到付款" ${ps==='貨到付款'?'selected':''}>貨到付款</option><option value="未串接金流" ${ps==='未串接金流'?'selected':''}>未串接金流</option><option value="付款失敗" ${ps==='付款失敗'?'selected':''}>付款失敗</option></select><div style="margin-top:5px"><span class="tag ${paymentStatusClass(ps)}">${ps}</span></div></td><td style="font-family:monospace;color:var(--text-dim)">${o.payment_last5||'—'}</td><td><select onchange="updateAdminOrderStatus('${o.id}',this.value)"><option value="待付款" ${o.status==='待付款'?'selected':''}>待付款</option><option value="處理中" ${o.status==='處理中'?'selected':''}>處理中</option><option value="配送中" ${o.status==='配送中'?'selected':''}>配送中</option><option value="已完成" ${o.status==='已完成'?'selected':''}>已完成</option><option value="已取消" ${o.status==='已取消'?'selected':''}>已取消</option></select><div style="margin-top:5px"><span class="tag ${statusClass(o.status)}">${o.status}</span></div></td></tr>`;
+    }).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--text-dim)">無訂單資料</td></tr>';
+}
+async function updateAdminPaymentStatus(id,s){
+    const patch={payment_status:s};
+    if(s==='已付款')patch.status='處理中';
+    const {error}=await supa.from('orders').update(patch).eq('id',id);
+    if(error){toast('❌ 付款狀態更新失敗：'+error.message);return;}
+    toast(`✅ 訂單 ${id} 付款狀態更新為「${s}」`);
+    loadAdminOrders();loadAdminDashboard();
+}
 async function updateAdminOrderStatus(id,s){const {error}=await supa.from('orders').update({status:s}).eq('id',id);if(error){toast('❌ 更新失敗');return;}toast(`✅ 訂單 ${id} 狀態更新為「${s}」`);const l=orders.find(o=>o.id===id);if(l){l.status=s;saveJSON(ordersKey,orders);}}
 function productRowsHTML(list,source='code'){
     const rows=(list&&list.length?list:products).map(p=>{
