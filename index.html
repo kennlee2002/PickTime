@@ -6,6 +6,7 @@
     <title>Picktime Ultimate | 拾光機 - 畢業專題展示版</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.19.2"></script>
     <style>
         :root{
 
@@ -886,6 +887,18 @@ margin-top:4px}
         .payment-status-paid{background:rgba(74,222,128,.14);color:#4ade80}
         .payment-status-pending{background:rgba(250,204,21,.14);color:#fde047}
         .payment-status-unpaid{background:rgba(255,107,107,.14);color:#ffb4b4}
+        .payment-box{display:none;margin-top:10px;padding:14px;border:1px solid rgba(196,164,132,.25);background:rgba(196,164,132,.06);border-radius:16px}
+        .payment-box.show{display:block}
+        .payment-box strong{color:var(--accent-gold)}
+        .payment-box .hint{margin:8px 0 0}
+        .tpfield{height:44px;border:1px solid var(--glass-border);background:rgba(255,255,255,.05);border-radius:12px;padding:10px 12px;margin-top:8px}
+        .tappay-field-focus{border-color:var(--accent-gold);box-shadow:0 0 0 3px rgba(196,164,132,.12)}
+        .payment-provider-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;background:rgba(196,164,132,.14);color:var(--accent-gold);border:1px solid rgba(196,164,132,.22)}
+        .payment-risk-list{margin:8px 0 0;padding-left:18px;color:var(--text-dim);font-size:12px;line-height:1.7}
+        .qr-pay-placeholder{display:flex;align-items:center;justify-content:center;width:160px;height:160px;border-radius:18px;border:1px dashed rgba(196,164,132,.45);background:rgba(255,255,255,.04);font-size:46px;margin:12px auto 8px}
+        .logistics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+        @media(max-width:620px){.logistics-grid{grid-template-columns:1fr}}
+
 
         /* Cart */
         .content-grid{
@@ -4548,18 +4561,34 @@ font-size:48px}
                 <input id="recipientName" placeholder="收件人姓名 *" />
                 <input id="recipientPhone" placeholder="手機號碼 *" />
                 <input id="recipientAddress" placeholder="收件地址 *" />
-                <select id="paymentMethod" onchange="toggleBankTransferBox()">
+                <select id="paymentMethod" onchange="togglePaymentBoxes()">
                     <option value="貨到付款">💵 貨到付款</option>
-                    <option value="信用卡">💳 信用卡（展示版，不會真的扣款）</option>
-                    <option value="行動支付">📱 行動支付（展示版，不會真的扣款）</option>
+                    <option value="信用卡_TapPay">💳 信用卡 / 金融卡（TapPay 串接）</option>
+                    <option value="TaiwanPay_TWQR">🇹🇼 TaiwanPay / TWQR（QR 收款）</option>
                     <option value="ATM轉帳">🏦 ATM / 銀行轉帳（需人工對帳）</option>
                 </select>
+                <div class="payment-box" id="cardPaymentBox">
+                    <strong>💳 信用卡付款</strong>
+                    <div class="payment-provider-badge">TapPay Direct Pay 架構</div>
+                    <p class="hint">正式刷卡不可把金流金鑰放在 HTML。前端只取得 prime，真正扣款由後端 <code>/api/payments/tappay/pay-by-prime</code> 完成。</p>
+                    <div id="card-number" class="tpfield"></div>
+                    <div id="card-expiration-date" class="tpfield"></div>
+                    <div id="card-ccv" class="tpfield"></div>
+                    <p class="hint" id="tappayStatusText">TapPay 尚未初始化。請在程式碼內填入 TAPPAY_APP_ID / TAPPAY_APP_KEY，並啟動 Node 後端。</p>
+                </div>
+                <div class="payment-box" id="taiwanPayBox">
+                    <strong>🇹🇼 TaiwanPay / TWQR 收款</strong>
+                    <div class="qr-pay-placeholder" id="twqrPreview">QR</div>
+                    <p class="hint">TaiwanPay 正式線上收款需要向收單機構申請 TWQR / TaiwanPay 商店服務。這裡先提供「QR 收款 + 後台對帳」流程；正式 API / 通知回調要由收單銀行提供。</p>
+                    <input id="taiwanPayRef" placeholder="付款完成後填交易序號 / 帳號後五碼 / 備註（必填）" />
+                    <ul class="payment-risk-list"><li>請不要只看買家截圖，一定要在銀行 / TaiwanPay 商戶後台確認入帳。</li><li>正式上線建議使用金流回調自動改訂單狀態。</li></ul>
+                </div>
                 <div class="bank-payment-box" id="bankPaymentBox">
                     <strong>🏦 銀行轉帳說明</strong>
                     <div class="bank-row"><span>銀行</span><span>中國信託 822</span></div>
                     <div class="bank-row"><span>帳號</span><span><code id="bankAccountNo">1234-5678-9012</code> <button type="button" class="ghost-btn copy-btn" onclick="copyBankAccount()">複製</button></span></div>
                     <div class="bank-row"><span>戶名</span><span>Picktime 拾光機 專題展示</span></div>
-                    <p class="hint" style="margin:8px 0 10px">目前這是「人工轉帳流程」：系統不會真的連銀行扣款，只會建立待付款訂單。付款後請填轉帳後五碼，後台再人工確認為已付款。</p>
+                    <p class="hint" style="margin:8px 0 10px">人工轉帳流程：系統不會自動連銀行扣款；付款後請填轉帳後五碼，後台再人工確認為已付款。</p>
                     <input id="bankLast5" maxlength="5" inputmode="numeric" placeholder="轉帳帳號後五碼 / 匯款備註（ATM轉帳必填）" />
                 </div>
                 <select id="shippingMethod" onchange="updateShipping()">
@@ -5286,7 +5315,7 @@ font-size:48px}
                         <button class="ghost-btn" onclick="loadAdminOrders()" style="padding:9px 16px;font-size:13px">🔄 重新整理</button>
                     </div>
                     <div style="overflow-x:auto">
-                        <table class="admin-table"><thead><tr><th>訂單編號</th><th>日期</th><th>收件人</th><th>金額</th><th>付款方式</th><th>付款狀態</th><th>轉帳後五碼</th><th>出貨狀態</th></tr></thead><tbody id="adminOrdersBody"><tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr></tbody></table>
+                        <table class="admin-table"><thead><tr><th>訂單編號</th><th>日期</th><th>收件人</th><th>金額</th><th>付款方式</th><th>付款狀態</th><th>交易備註</th><th>物流狀態</th><th>物流單號</th></tr></thead><tbody id="adminOrdersBody"><tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr></tbody></table>
                     </div>
                 </div>
             </div>
@@ -6221,16 +6250,73 @@ function renderCart(){
 }
 function updateCartBadge(){document.getElementById('cartCount').textContent=cart.reduce((s,i)=>s+i.qty,0);}
 
-function toggleBankTransferBox(){
+function togglePaymentBoxes(){
     const method=document.getElementById('paymentMethod')?.value;
-    const box=document.getElementById('bankPaymentBox');
-    if(box)box.classList.toggle('show',method==='ATM轉帳');
+    const bank=document.getElementById('bankPaymentBox');
+    const card=document.getElementById('cardPaymentBox');
+    const twpay=document.getElementById('taiwanPayBox');
+    if(bank)bank.classList.toggle('show',method==='ATM轉帳');
+    if(card)card.classList.toggle('show',method==='信用卡_TapPay');
+    if(twpay)twpay.classList.toggle('show',method==='TaiwanPay_TWQR');
+    if(method==='信用卡_TapPay') initTapPayFields();
 }
+function toggleBankTransferBox(){togglePaymentBoxes();}
 function copyBankAccount(){
     const account=document.getElementById('bankAccountNo')?.textContent||'';
     if(!account)return;
     navigator.clipboard?.writeText(account).then(()=>toast('✅ 已複製銀行帳號')).catch(()=>toast('帳號：'+account));
 }
+
+// ─── Payment Gateway Config ───
+const PAYMENT_API_BASE = window.PICKTIME_PAYMENT_API_BASE || 'http://localhost:8787';
+const TAPPAY_APP_ID = window.PICKTIME_TAPPAY_APP_ID || 0;
+const TAPPAY_APP_KEY = window.PICKTIME_TAPPAY_APP_KEY || '';
+const TAPPAY_SERVER_TYPE = window.PICKTIME_TAPPAY_SERVER_TYPE || 'sandbox';
+let tapPayReady=false;
+function initTapPayFields(){
+    const statusEl=document.getElementById('tappayStatusText');
+    if(tapPayReady)return true;
+    if(!window.TPDirect){ if(statusEl)statusEl.textContent='找不到 TapPay SDK，請確認網路或 SDK script。'; return false; }
+    if(!TAPPAY_APP_ID||!TAPPAY_APP_KEY){ if(statusEl)statusEl.textContent='尚未填入 TapPay APP_ID / APP_KEY；目前不會真的扣款。'; return false; }
+    try{
+        TPDirect.setupSDK(TAPPAY_APP_ID,TAPPAY_APP_KEY,TAPPAY_SERVER_TYPE);
+        TPDirect.card.setup({
+            fields:{
+                number:{element:'#card-number',placeholder:'**** **** **** ****'},
+                expirationDate:{element:'#card-expiration-date',placeholder:'MM / YY'},
+                ccv:{element:'#card-ccv',placeholder:'後三碼'}
+            },
+            styles:{'input':{'color':'#fff','font-size':'14px'},':focus':{'color':'#fff'},'.valid':{'color':'#4ade80'},'.invalid':{'color':'#ff8f8f'}}
+        });
+        TPDirect.card.onUpdate(function(update){
+            if(statusEl) statusEl.textContent=update.canGetPrime?'卡片資料可送出，確認結帳後會由後端請款。':'請完整填寫卡號、效期與安全碼。';
+        });
+        tapPayReady=true;
+        if(statusEl)statusEl.textContent='TapPay 已初始化，請輸入測試卡資料。';
+        return true;
+    }catch(e){ if(statusEl)statusEl.textContent='TapPay 初始化失敗：'+e.message; return false; }
+}
+function getTapPayPrime(){
+    return new Promise((resolve,reject)=>{
+        if(!initTapPayFields()) return reject(new Error('TapPay 尚未初始化，請先填入金流設定並啟動後端。'));
+        const st=TPDirect.card.getTappayFieldsStatus();
+        if(!st.canGetPrime) return reject(new Error('卡片資料尚未完整或格式錯誤'));
+        TPDirect.card.getPrime((result)=>{
+            if(result.status!==0) reject(new Error(result.msg||'取得 prime 失敗'));
+            else resolve(result.card.prime);
+        });
+    });
+}
+async function payByTapPayPrime(orderId,total,prime,cardholder){
+    const res=await fetch(PAYMENT_API_BASE+'/api/payments/tappay/pay-by-prime',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({orderId,amount:total,prime,cardholder})
+    });
+    const json=await res.json().catch(()=>({}));
+    if(!res.ok||json.ok===false) throw new Error(json.message||json.error||'TapPay 後端請款失敗');
+    return json;
+}
+
 function paymentStatusClass(status){
     if(status==='已付款')return 'payment-status-paid';
     if(status==='待付款')return 'payment-status-pending';
@@ -6242,8 +6328,10 @@ async function checkout(){
     const name=document.getElementById('recipientName').value.trim(),phone=document.getElementById('recipientPhone').value.trim(),address=document.getElementById('recipientAddress').value.trim();
     const payment=document.getElementById('paymentMethod').value,shipping=document.getElementById('shippingMethod').value;
     const bankLast5=(document.getElementById('bankLast5')?.value||'').trim();
+    const taiwanPayRef=(document.getElementById('taiwanPayRef')?.value||'').trim();
     if(!name||!phone||!address){toast('⚠️ 請填寫收件人資料');return;}
     if(payment==='ATM轉帳'&&!/^\d{5}$/.test(bankLast5)){toast('⚠️ ATM / 銀行轉帳請填 5 位數轉帳後五碼');return;}
+    if(payment==='TaiwanPay_TWQR'&&taiwanPayRef.length<4){toast('⚠️ TaiwanPay / TWQR 請填交易序號或付款備註，方便後台對帳');return;}
     const subtotal=cart.reduce((s,i)=>s+i.price*i.qty,0);
     const sf=shipping==='711'||shipping==='family'?60:(subtotal>=1000?0:100);
     const ld=subtotal>=10000?300:0;
@@ -6251,15 +6339,36 @@ async function checkout(){
     const orderId='#PT-'+Math.floor(10000+Math.random()*90000);
     const earnedPoints=Math.floor(total/100);
     const acd=couponDiscount;
-    const paymentStatus=payment==='ATM轉帳'?'待付款':(payment==='貨到付款'?'貨到付款':'未串接金流');
-    const status=payment==='ATM轉帳'?'待付款':'處理中';
+    let paymentStatus='待付款', status='待付款', paymentNote=null, paymentTradeNo=null, paymentProvider=payment;
+
+    if(payment==='貨到付款'){paymentStatus='貨到付款';status='處理中';paymentNote='貨到付款，出貨前可由後台確認';}
+    if(payment==='ATM轉帳'){paymentStatus='待付款';status='待付款';paymentNote='ATM / 銀行轉帳待人工對帳：'+bankLast5;}
+    if(payment==='TaiwanPay_TWQR'){paymentStatus='待確認';status='待付款';paymentNote='TaiwanPay / TWQR 待對帳：'+taiwanPayRef;}
+    if(payment==='信用卡_TapPay'){paymentStatus='刷卡處理中';status='待付款';paymentNote='TapPay 信用卡付款處理中';}
+
     if(couponDiscount>0&&user){const code=document.getElementById('couponInput').value.trim().toUpperCase();const c=(user.coupons||[]).find(c=>c.code===code);if(c)c.used=true;}
     couponDiscount=0;
     const {data:{user:authUser}}=await supa.auth.getUser();
-    const op={id:orderId,user_id:authUser?.id||null,recipient_name:name,recipient_phone:phone,recipient_address:address,payment,payment_status:paymentStatus,payment_last5:bankLast5||null,payment_note:payment==='ATM轉帳'?'等待後台人工對帳確認':null,shipping,subtotal,shipping_fee:sf,discount:ld+acd,total,status,items:cart.map(i=>({...i}))};
+    const orderItems=cart.map(i=>({...i}));
+    const op={id:orderId,user_id:authUser?.id||null,recipient_name:name,recipient_phone:phone,recipient_address:address,payment,payment_status:paymentStatus,payment_last5:bankLast5||taiwanPayRef||null,payment_note:paymentNote,payment_provider:paymentProvider,payment_trade_no:paymentTradeNo,shipping,subtotal,shipping_fee:sf,discount:ld+acd,total,status,items:orderItems,logistics_status:'待出貨',tracking_no:null};
     const {error:oe}=await supa.from('orders').insert([op]);
     if(oe){if(oe.code==='42501'||oe.code==='PGRST301'){toast('⚠️ 訂單無法儲存（RLS 未設定）');showDBError('RLS 未設定');}else toast('⚠️ 訂單儲存失敗：'+oe.message);return;}
-    const no={id:orderId,date:today(),amount:total,status,payment,paymentStatus,paymentLast5:bankLast5,shipping,items:cart.map(i=>({...i}))};
+
+    if(payment==='信用卡_TapPay'){
+        try{
+            toast('💳 正在取得 TapPay prime 並向後端請款...',4000);
+            const prime=await getTapPayPrime();
+            const paid=await payByTapPayPrime(orderId,total,prime,{name,phone,email:user.email||authUser?.email||''});
+            paymentStatus='已付款'; status='處理中'; paymentTradeNo=paid.transactionId||paid.rec_trade_id||paid.tradeNo||null; paymentNote='TapPay 刷卡成功';
+            await supa.from('orders').update({payment_status:paymentStatus,status,payment_trade_no:paymentTradeNo,payment_note:paymentNote,payment_callback_payload:paid}).eq('id',orderId);
+        }catch(e){
+            await supa.from('orders').update({payment_status:'付款失敗',status:'待付款',payment_note:'TapPay 付款失敗：'+e.message}).eq('id',orderId);
+            toast('❌ 信用卡付款失敗：'+e.message,6000);
+            return;
+        }
+    }
+
+    const no={id:orderId,date:today(),amount:total,status,payment,paymentStatus,paymentLast5:bankLast5||taiwanPayRef,shipping,items:orderItems};
     orders.unshift(no);saveJSON(ordersKey,orders);
     user.orders=(user.orders||0)+1;user.spent=(user.spent||0)+total;user.points=(user.points||0)+earnedPoints;
     if(!user.pointsHistory)user.pointsHistory=[];
@@ -6268,8 +6377,12 @@ async function checkout(){
     saveJSON(userKey,user);
     if(user.id){await supa.from('users').update({spent:user.spent,points:user.points,level:user.level,points_history:JSON.stringify(user.pointsHistory),coupons:JSON.stringify(user.coupons)}).eq('id',user.id);}
     cart=[];saveJSON(cartKey,cart);updateCartBadge();renderCart();updateMemberUI();syncMemberForm();
-    document.getElementById('bankLast5')&&(document.getElementById('bankLast5').value='');toggleBankTransferBox();
-    if(payment==='ATM轉帳')toast(`🏦 訂單成立！${orderId} 目前為待付款，請等待後台人工對帳`,5000);
+    document.getElementById('bankLast5')&&(document.getElementById('bankLast5').value='');
+    document.getElementById('taiwanPayRef')&&(document.getElementById('taiwanPayRef').value='');
+    togglePaymentBoxes();
+    if(payment==='信用卡_TapPay')toast(`💳 刷卡成功！訂單 ${orderId} 已付款，回饋 ${earnedPoints} 積分`,5000);
+    else if(payment==='TaiwanPay_TWQR')toast(`🇹🇼 訂單成立！${orderId} TaiwanPay / TWQR 待後台確認入帳`,5000);
+    else if(payment==='ATM轉帳')toast(`🏦 訂單成立！${orderId} 目前為待付款，請等待後台人工對帳`,5000);
     else toast(`🎉 訂單成立！${orderId}  回饋 ${earnedPoints} 積分`);
     setTimeout(()=>showView('member'),800);
 }
@@ -6335,13 +6448,14 @@ function logoutAdmin(){isAdminLoggedIn=false;document.getElementById('navAdminBt
 function switchAdminTab(tab){document.querySelectorAll('.admin-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('atab-'+tab).classList.add('active');document.querySelectorAll('[data-atab]').forEach(b=>b.classList.toggle('active',b.dataset.atab===tab));if(tab==='dashboard')loadAdminDashboard();else if(tab==='orders')loadAdminOrders();else if(tab==='products')loadAdminProducts();else if(tab==='users')loadAdminUsers();}
 async function loadAdminDashboard(){document.getElementById('aStatProducts').textContent=products.length;const {data:ao}=await supa.from('orders').select('id,total,status,recipient_name,created_at,payment').order('created_at',{ascending:false});if(ao){document.getElementById('aStatOrders').textContent=ao.length;document.getElementById('aStatRevenue').textContent='NT$ '+ao.reduce((s,o)=>s+(o.total||0),0).toLocaleString('zh-TW');document.getElementById('adminRecentOrdersBody').innerHTML=ao.slice(0,10).map(o=>`<tr><td style="font-family:monospace;color:var(--accent-gold)">${o.id}</td><td>${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td><span class="tag ${statusClass(o.status)}">${o.status}</span></td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--text-dim)">無訂單</td></tr>';}const {data:au}=await supa.from('users').select('id').limit(1000);document.getElementById('aStatUsers').textContent=au?au.length:'—';}
 async function loadAdminOrders(){
-    document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr>';
+    document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:20px">載入中...</td></tr>';
     const {data:ao,error}=await supa.from('orders').select('*').order('created_at',{ascending:false});
-    if(error||!ao){document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="8" style="color:#ff8f8f;padding:20px;text-align:center">載入失敗，請檢查 orders 資料表與 RLS 權限</td></tr>';return;}
+    if(error||!ao){document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="9" style="color:#ff8f8f;padding:20px;text-align:center">載入失敗，請檢查 orders 資料表與 RLS 權限</td></tr>';return;}
     document.getElementById('adminOrdersBody').innerHTML=ao.length?ao.map(o=>{
         const ps=o.payment_status||((o.payment==='ATM轉帳')?'待付款':'—');
-        return `<tr><td style="font-family:monospace;font-size:12px;color:var(--accent-gold)">${o.id}</td><td style="font-size:12px">${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td style="font-size:12px">${o.payment||'—'}</td><td><select onchange="updateAdminPaymentStatus('${o.id}',this.value)"><option value="待付款" ${ps==='待付款'?'selected':''}>待付款</option><option value="已付款" ${ps==='已付款'?'selected':''}>已付款</option><option value="貨到付款" ${ps==='貨到付款'?'selected':''}>貨到付款</option><option value="未串接金流" ${ps==='未串接金流'?'selected':''}>未串接金流</option><option value="付款失敗" ${ps==='付款失敗'?'selected':''}>付款失敗</option></select><div style="margin-top:5px"><span class="tag ${paymentStatusClass(ps)}">${ps}</span></div></td><td style="font-family:monospace;color:var(--text-dim)">${o.payment_last5||'—'}</td><td><select onchange="updateAdminOrderStatus('${o.id}',this.value)"><option value="待付款" ${o.status==='待付款'?'selected':''}>待付款</option><option value="處理中" ${o.status==='處理中'?'selected':''}>處理中</option><option value="配送中" ${o.status==='配送中'?'selected':''}>配送中</option><option value="已完成" ${o.status==='已完成'?'selected':''}>已完成</option><option value="已取消" ${o.status==='已取消'?'selected':''}>已取消</option></select><div style="margin-top:5px"><span class="tag ${statusClass(o.status)}">${o.status}</span></div></td></tr>`;
-    }).join(''):'<tr><td colspan="8" style="text-align:center;color:var(--text-dim)">無訂單資料</td></tr>';
+        const note=o.payment_trade_no||o.payment_note||o.payment_last5||'—';
+        return `<tr><td style="font-family:monospace;font-size:12px;color:var(--accent-gold)">${o.id}</td><td style="font-size:12px">${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td style="font-size:12px">${o.payment||'—'}</td><td><select onchange="updateAdminPaymentStatus('${o.id}',this.value)"><option value="待付款" ${ps==='待付款'?'selected':''}>待付款</option><option value="待確認" ${ps==='待確認'?'selected':''}>待確認</option><option value="刷卡處理中" ${ps==='刷卡處理中'?'selected':''}>刷卡處理中</option><option value="已付款" ${ps==='已付款'?'selected':''}>已付款</option><option value="貨到付款" ${ps==='貨到付款'?'selected':''}>貨到付款</option><option value="付款失敗" ${ps==='付款失敗'?'selected':''}>付款失敗</option></select><div style="margin-top:5px"><span class="tag ${paymentStatusClass(ps)}">${ps}</span></div></td><td style="font-family:monospace;color:var(--text-dim);max-width:220px;white-space:normal">${note}</td><td><select onchange="updateAdminOrderStatus('${o.id}',this.value)"><option value="待付款" ${o.status==='待付款'?'selected':''}>待付款</option><option value="處理中" ${o.status==='處理中'?'selected':''}>處理中</option><option value="配送中" ${o.status==='配送中'?'selected':''}>配送中</option><option value="已完成" ${o.status==='已完成'?'selected':''}>已完成</option><option value="已取消" ${o.status==='已取消'?'selected':''}>已取消</option></select><div style="margin-top:5px"><span class="tag ${statusClass(o.status)}">${o.status}</span></div></td><td><input value="${o.tracking_no||''}" placeholder="物流單號" onchange="updateAdminTrackingNo('${o.id}',this.value)" style="max-width:130px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;border-radius:8px;padding:6px"></td></tr>`;
+    }).join(''):'<tr><td colspan="9" style="text-align:center;color:var(--text-dim)">無訂單資料</td></tr>';
 }
 async function updateAdminPaymentStatus(id,s){
     const patch={payment_status:s};
@@ -6352,6 +6466,7 @@ async function updateAdminPaymentStatus(id,s){
     loadAdminOrders();loadAdminDashboard();
 }
 async function updateAdminOrderStatus(id,s){const {error}=await supa.from('orders').update({status:s}).eq('id',id);if(error){toast('❌ 更新失敗');return;}toast(`✅ 訂單 ${id} 狀態更新為「${s}」`);const l=orders.find(o=>o.id===id);if(l){l.status=s;saveJSON(ordersKey,orders);}}
+async function updateAdminTrackingNo(id,no){const {error}=await supa.from('orders').update({tracking_no:no,logistics_status:no?'已出貨':'待出貨'}).eq('id',id);if(error){toast('❌ 物流單號更新失敗：'+error.message);return;}toast('✅ 已更新物流單號');}
 
 function normalizeProductRecord(p){
     return {
