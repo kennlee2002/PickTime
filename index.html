@@ -3552,6 +3552,38 @@ font-size:48px}
         }
 
 
+        /* Admin Product Live Manager */
+        .admin-sync-box{
+            display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+            padding:16px;border:1px solid rgba(196,164,132,.22);border-radius:18px;
+            background:rgba(196,164,132,.045);margin-bottom:16px;flex-wrap:wrap;
+        }
+        .admin-sync-title{font-weight:900;color:var(--accent-gold);margin-bottom:6px}
+        .admin-sync-desc{margin:0;color:var(--text-dim);font-size:13px;line-height:1.7;max-width:720px}
+        .admin-source-badge{display:inline-block;margin-top:10px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--glass-border);font-size:11px;color:var(--accent-gold)}
+        .admin-sync-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+        .mini-admin-btn{border:1px solid var(--glass-border);background:rgba(255,255,255,.04);color:#fff;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:800;cursor:pointer;transition:.2s}
+        .mini-admin-btn:hover{border-color:var(--accent-gold);color:var(--accent-gold)}
+        .mini-admin-btn.gold{background:var(--accent-gold);border-color:var(--accent-gold);color:#0f172a}
+        .admin-product-form{
+            display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px;
+            padding:16px;border:1px solid var(--glass-border);border-radius:18px;
+            background:rgba(255,255,255,.025);margin-bottom:16px;
+        }
+        .admin-product-form h4{grid-column:1/-1;margin:0 0 4px;color:var(--accent-gold);letter-spacing:2px}
+        .admin-product-form input,.admin-product-form select,.admin-product-form textarea{
+            width:100%;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);
+            color:#fff;border-radius:12px;padding:10px 12px;outline:none;font-size:13px;
+        }
+        .admin-product-form textarea{grid-column:1/-1;min-height:76px;resize:vertical}
+        .admin-product-form input:focus,.admin-product-form select:focus,.admin-product-form textarea:focus{border-color:var(--accent-gold)}
+        .admin-product-form select option{background:#1e293b}
+        .admin-form-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+        .product-live-note{grid-column:1/-1;font-size:12px;color:var(--text-dim);line-height:1.7}
+        @media(max-width:900px){.admin-product-form{grid-template-columns:1fr 1fr}}
+        @media(max-width:620px){.admin-product-form{grid-template-columns:1fr}}
+
+
         /* ─────────────────────────────────────────────
            Picktime Ultimate Plus：售後、客服、會員優惠、節日活動、評分回饋
            ───────────────────────────────────────────── */
@@ -5260,17 +5292,36 @@ font-size:48px}
             </div>
             <div class="admin-tab-content" id="atab-products">
                 <div class="panel">
-                    <h3 style="margin:0 0 16px">🛍️ 商品列表</h3>
+                    <h3 style="margin:0 0 16px">🛍️ 商品列表 / 商品上架</h3>
                     <div class="admin-sync-box">
                         <div>
                             <div class="admin-sync-title">商品資料同步中心</div>
-                            <p class="admin-sync-desc">商品後台會自動讀取程式碼中的 <strong>products</strong> 陣列。之後你只要在程式碼新增商品，重新整理後台就會自動出現在這裡；按下「同步到 Supabase」可把程式碼商品寫入資料庫。</p>
+                            <p class="admin-sync-desc">新版已改成「資料庫商品模式」：你在後台新增商品 → 寫入 Supabase products 資料表 → 前台首頁會自動重新讀取並顯示該商品。若 Supabase 尚未建立 products 表，網站會自動退回使用程式碼內建商品。</p>
                             <span class="admin-source-badge" id="adminProductSourceBadge">來源：程式碼商品陣列</span>
                         </div>
                         <div class="admin-sync-actions">
-                            <button class="mini-admin-btn" onclick="loadAdminProducts()">🔄 重新整理後台</button>
+                            <button class="mini-admin-btn" onclick="loadAdminProducts()">🔄 顯示目前前台商品</button>
                             <button class="mini-admin-btn" onclick="loadProductsFromSupabase()">☁️ 從 Supabase 讀取</button>
-                            <button class="mini-admin-btn gold" onclick="syncCodeProductsToSupabase()">⬆️ 同步到 Supabase</button>
+                            <button class="mini-admin-btn gold" onclick="syncCodeProductsToSupabase()">⬆️ 首次同步內建商品</button>
+                        </div>
+                    </div>
+                    <div class="admin-product-form">
+                        <h4>➕ 新增商品到資料庫</h4>
+                        <input id="newProductName" placeholder="商品名稱，例如 Air Max 復古鞋" />
+                        <select id="newProductCategory">
+                            <option value="3C">3C</option><option value="配件">配件</option><option value="文具">文具</option><option value="穿戴">穿戴</option><option value="生活">生活</option><option value="時尚">時尚</option><option value="運動">運動</option><option value="鞋款">鞋款</option><option value="服飾">服飾</option><option value="包款">包款</option><option value="美食">美食</option><option value="美妝">美妝</option>
+                        </select>
+                        <input id="newProductPrice" type="number" min="0" placeholder="售價，例如 2580" />
+                        <input id="newProductOriginal" type="number" min="0" placeholder="原價，可空白" />
+                        <input id="newProductImg" placeholder="圖片 URL，可貼 Unsplash / 商品圖片網址" />
+                        <input id="newProductEmoji" placeholder="備用圖示，例如 👟" />
+                        <select id="newProductBadge"><option value="">無標籤</option><option value="new">新品</option><option value="hot">熱賣</option><option value="sale">特價</option></select>
+                        <input id="newProductStock" type="number" min="0" placeholder="庫存，可空白" />
+                        <textarea id="newProductDesc" placeholder="商品描述：材質、特色、適合情境..."></textarea>
+                        <div class="admin-form-actions">
+                            <button class="gold-btn" onclick="addProductFromAdmin()">✅ 新增商品並上架</button>
+                            <button class="ghost-btn" onclick="clearProductForm()">清空表單</button>
+                            <span class="product-live-note">新增成功後會立即更新前台商品列表；正式上線前建議再做圖片上傳、庫存扣除與付款金流串接。</span>
                         </div>
                     </div>
                     <div style="overflow-x:auto">
@@ -6152,6 +6203,73 @@ async function updateAdminPaymentStatus(id,s){
     loadAdminOrders();loadAdminDashboard();
 }
 async function updateAdminOrderStatus(id,s){const {error}=await supa.from('orders').update({status:s}).eq('id',id);if(error){toast('❌ 更新失敗');return;}toast(`✅ 訂單 ${id} 狀態更新為「${s}」`);const l=orders.find(o=>o.id===id);if(l){l.status=s;saveJSON(ordersKey,orders);}}
+
+function normalizeProductRecord(p){
+    return {
+        id:Number(p.id),
+        name:p.name||'未命名商品',
+        price:Number(p.price||0),
+        originalPrice:Number(p.original_price ?? p.originalPrice ?? p.price ?? 0),
+        img:p.img||'',
+        emoji:p.emoji||'🛍️',
+        category:p.category||'未分類',
+        rating:Number(p.rating||5),
+        sold:Number(p.sold||0),
+        desc:p.description ?? p.desc ?? '',
+        badge:p.badge||'',
+        stock:Number(p.stock||0),
+        is_active:p.is_active!==false
+    };
+}
+function replaceProductsWith(list,source='supabase'){
+    const normalized=(list||[]).map(normalizeProductRecord).filter(p=>p.name&&p.is_active!==false);
+    if(!normalized.length) return false;
+    products.splice(0,products.length,...normalized);
+    normalized.forEach(p=>{ if(p.category && !categories.includes(p.category)) categories.push(p.category); });
+    renderCategories();renderProducts();
+    const badge=document.getElementById('adminProductSourceBadge');
+    if(badge) badge.textContent=source==='supabase'?'來源：Supabase products 資料表（前台同步中）':'來源：程式碼商品陣列';
+    return true;
+}
+async function loadPublicProductsFromSupabase(silent=true){
+    try{
+        const {data,error}=await supa.from('products').select('*').eq('is_active',true).order('id',{ascending:true});
+        if(error||!data||!data.length){ if(!silent) showDBError('讀取 products 失敗，請先執行新版 SQL 建立 products 資料表。'+(error?' 錯誤：'+error.message:'')); return false; }
+        replaceProductsWith(data,'supabase');
+        if(!silent) toast(`☁️ 前台已同步 ${data.length} 筆資料庫商品`);
+        return true;
+    }catch(e){ if(!silent) showDBError('讀取 products 發生錯誤：'+e.message); return false; }
+}
+function clearProductForm(){
+    ['newProductName','newProductPrice','newProductOriginal','newProductImg','newProductEmoji','newProductStock','newProductDesc'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    const b=document.getElementById('newProductBadge');if(b)b.value='';
+}
+async function addProductFromAdmin(){
+    const name=document.getElementById('newProductName')?.value.trim();
+    const category=document.getElementById('newProductCategory')?.value||'未分類';
+    const price=Number(document.getElementById('newProductPrice')?.value||0);
+    const original=Number(document.getElementById('newProductOriginal')?.value||0)||price;
+    const img=document.getElementById('newProductImg')?.value.trim()||'';
+    const emoji=document.getElementById('newProductEmoji')?.value.trim()||'🛍️';
+    const badge=document.getElementById('newProductBadge')?.value||'';
+    const stock=Number(document.getElementById('newProductStock')?.value||0);
+    const description=document.getElementById('newProductDesc')?.value.trim()||'';
+    if(!name){toast('⚠️ 請輸入商品名稱');return;}
+    if(!price||price<1){toast('⚠️ 請輸入正確售價');return;}
+    const payload={name,category,price,original_price:original,img,emoji,badge,stock,description,rating:5,sold:0,is_active:true,updated_at:new Date().toISOString()};
+    toast('正在新增商品到 Supabase...');
+    const {data,error}=await supa.from('products').insert([payload]).select().single();
+    if(error){
+        showDBError('新增商品失敗：請確認已執行新版 products SQL，且目前登入帳號是管理員 Email。錯誤：'+error.message);
+        toast('❌ 新增商品失敗');
+        return;
+    }
+    clearProductForm();
+    await loadPublicProductsFromSupabase(true);
+    loadProductsFromSupabase();
+    toast(`✅ 已上架：${data.name}`);
+}
+
 function productRowsHTML(list,source='code'){
     const rows=(list&&list.length?list:products).map(p=>{
         const original=p.originalPrice ?? p.original_price ?? p.original ?? p.price;
@@ -6183,11 +6301,14 @@ function codeProductPayload(){
         price:p.price,
         original_price:p.originalPrice||p.price,
         img:p.img,
+        emoji:p.emoji||'🛍️',
         category:p.category,
         rating:p.rating,
         sold:p.sold,
+        stock:p.stock||0,
         description:p.desc,
         badge:p.badge||'',
+        is_active:true,
         updated_at:new Date().toISOString()
     }));
 }
@@ -6235,10 +6356,10 @@ async function loadProductsFromSupabase(){
             toast('⚠️ Supabase products 目前沒有資料，已顯示程式碼商品');
             return;
         }
-        body.innerHTML=productRowsHTML(data.map(p=>({
-            id:p.id,name:p.name,price:p.price,original_price:p.original_price,img:p.img,category:p.category,rating:p.rating,sold:p.sold,desc:p.description,badge:p.badge
-        })),'supabase');
-        toast(`☁️ 已從 Supabase 載入 ${data.length} 筆商品`);
+        const list=data.map(normalizeProductRecord);
+        replaceProductsWith(list,'supabase');
+        body.innerHTML=productRowsHTML(list,'supabase');
+        toast(`☁️ 已從 Supabase 載入 ${data.length} 筆商品，前台已同步更新`);
     }catch(e){
         body.innerHTML=productRowsHTML(products,'code');
         showDBError('讀取 Supabase 商品時發生錯誤：'+e.message);
@@ -6260,6 +6381,7 @@ async function boot(){
     }else{user=null;}
     if(user){const {data:uo}=await supa.from('orders').select('*').eq('user_id',user.id).order('created_at',{ascending:false});if(uo&&uo.length>0){orders=uo.map(o=>({id:o.id,date:o.created_at?.slice(0,10).replace(/-/g,'/'),amount:o.total,status:o.status,payment:o.payment,items:typeof o.items==='string'?JSON.parse(o.items||'[]'):o.items||[]}));}else orders=loadJSON(ordersKey,[]);}
     else{orders=loadJSON(ordersKey,[{id:'#PT-88291',date:'2026/05/10',amount:15800,status:'配送中',payment:'信用卡',items:[]},{id:'#PT-88102',date:'2026/04/15',amount:4500,status:'已完成',payment:'行動支付',items:[]}]);}
+    await loadPublicProductsFromSupabase(true);
     renderAll();
 }
 
