@@ -4921,12 +4921,20 @@ font-size:48px}
             <input id="regPhone" placeholder="手機號碼（選填）" />
             <input id="regAddress" placeholder="收件地址（選填）" />
             <button class="gold-btn" onclick="handleRegister()" style="padding:14px;font-size:15px">建立帳號 →</button>
+            <div class="oauth-divider">或</div>
+            <button class="google-login-btn" onclick="loginWithGoogle()" type="button">
+                <span class="google-dot">G</span> 使用 Google 快速登入
+            </button>
         </div>
         <div id="loginPane" class="auth-grid hide">
             <input id="loginEmail" type="email" placeholder="電子郵件" />
             <input id="loginPass" type="password" placeholder="密碼" />
             <button class="gold-btn" onclick="handleLogin()" style="padding:14px;font-size:15px">登入 →</button>
-            <div class="hint">此版本以 Supabase 驗證會員登入。</div>
+            <div class="oauth-divider">或</div>
+            <button class="google-login-btn" onclick="loginWithGoogle()" type="button">
+                <span class="google-dot">G</span> 使用 Google 登入
+            </button>
+            <div class="hint">此版本以 Supabase 驗證會員登入，也支援 Google 快速登入。</div>
         </div>
     </div>
 </div>
@@ -5383,6 +5391,23 @@ async function handleRegister(){
     if(!authData.session){closeAuthModal();toast('📧 已寄出驗證信，請到信箱點擊連結後再登入！',5000);return;}
     user={...data,avatar:name.slice(0,2).toUpperCase(),coupons:typeof data.coupons==='string'?JSON.parse(data.coupons):data.coupons||defaultCoupons,addresses:typeof data.addresses==='string'?JSON.parse(data.addresses):data.addresses||[],pointsHistory:typeof data.points_history==='string'?JSON.parse(data.points_history):data.points_history||[]};
     saveJSON(userKey,user);syncMemberForm();updateMemberUI();closeAuthModal();toast('✨ 歡迎加入！已獲得 200 歡迎積分');updateLoginUI();
+}
+
+
+async function loginWithGoogle(){
+    if(!supa){
+        toast('Supabase 尚未初始化');
+        return;
+    }
+    const { error } = await supa.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: 'https://pick-time-gamma.vercel.app/'
+        }
+    });
+    if(error){
+        toast('Google 登入失敗：' + error.message);
+    }
 }
 
 async function handleLogin(){
