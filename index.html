@@ -1497,6 +1497,75 @@ border-color:var(--accent-gold)}
         .auth-grid input::placeholder{
 color:rgba(255,255,255,.35)}
 
+
+        .oauth-divider{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            color:var(--text-dim);
+            font-size:12px;
+            letter-spacing:2px;
+            margin:2px 0;
+        }
+        .oauth-divider::before,
+        .oauth-divider::after{
+            content:"";
+            height:1px;
+            flex:1;
+            background:rgba(255,255,255,.12);
+        }
+        .google-login-btn{
+            width:100%;
+            min-height:52px;
+            border-radius:14px;
+            border:1px solid rgba(196,164,132,.45);
+            background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(196,164,132,.08));
+            color:#fff;
+            font-weight:800;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            transition:.22s;
+        }
+        .google-login-btn:hover{
+            border-color:var(--accent-gold);
+            color:var(--accent-gold);
+            transform:translateY(-1px);
+        }
+        .google-dot{
+            width:26px;
+            height:26px;
+            border-radius:50%;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            background:#fff;
+            color:#111827;
+            font-weight:900;
+            font-family:Arial,sans-serif;
+            box-shadow:0 4px 14px rgba(0,0,0,.2);
+        }
+        .forgot-row{
+            display:flex;
+            justify-content:flex-end;
+            margin-top:-4px;
+        }
+        .forgot-link{
+            border:none;
+            background:transparent;
+            color:var(--accent-gold);
+            font-size:13px;
+            font-weight:700;
+            cursor:pointer;
+            padding:2px 0;
+        }
+        .forgot-link:hover{
+            color:var(--accent-gold-light);
+            text-decoration:underline;
+        }
+
         .hint{
 font-size:12px;
 color:var(--text-dim);
@@ -4930,6 +4999,9 @@ font-size:48px}
             <input id="loginEmail" type="email" placeholder="電子郵件" />
             <input id="loginPass" type="password" placeholder="密碼" />
             <button class="gold-btn" onclick="handleLogin()" style="padding:14px;font-size:15px">登入 →</button>
+            <div class="forgot-row">
+                <button class="forgot-link" onclick="openForgotPasswordModal()" type="button">忘記密碼？</button>
+            </div>
             <div class="oauth-divider">或</div>
             <button class="google-login-btn" onclick="loginWithGoogle()" type="button">
                 <span class="google-dot">G</span> 使用 Google 登入
@@ -4939,15 +5011,32 @@ font-size:48px}
     </div>
 </div>
 
+<!-- Forgot Password Modal -->
+<div class="modal" id="forgotPasswordModal">
+    <div class="modal-card">
+        <button class="modal-close" onclick="closeForgotPasswordModal()">&times;</button>
+        <h3 style="margin:0 0 10px;color:var(--accent-gold);letter-spacing:2px">安全重設密碼</h3>
+        <p class="hint" style="margin-bottom:18px">
+            請輸入你的註冊 Email。系統會寄出官方重設連結，讓使用者自己設定新密碼；網站不會產生、顯示或寄送明文密碼。
+        </p>
+        <div class="auth-grid">
+            <input id="forgotEmail" type="email" placeholder="請輸入註冊 Email" />
+            <button class="gold-btn" onclick="sendPasswordResetEmail()" style="padding:14px;font-size:15px">寄送重設連結 →</button>
+            <div class="hint">收到信後點擊連結，回到 Picktime 會出現「設定新密碼」視窗。</div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Change Password Modal -->
 <div class="modal" id="changePassModal">
     <div class="modal-card">
         <button class="modal-close" onclick="document.getElementById('changePassModal').style.display='none'">&times;</button>
-        <h3 style="margin:0 0 20px;color:var(--accent-gold)">修改密碼</h3>
+        <h3 style="margin:0 0 20px;color:var(--accent-gold)">設定新密碼</h3>
         <div style="display:grid;gap:12px">
             <input id="newPass" type="password" placeholder="新密碼（至少 8 碼）" style="width:100%;padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;outline:none" />
             <input id="newPass2" type="password" placeholder="確認新密碼" style="width:100%;padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;outline:none" />
-            <button class="gold-btn" onclick="changePassword()">確認修改</button>
+            <button class="gold-btn" onclick="changePassword()">完成設定新密碼</button>
         </div>
     </div>
 </div>
@@ -5399,14 +5488,51 @@ async function loginWithGoogle(){
         toast('Supabase 尚未初始化');
         return;
     }
+
+    const redirectUrl = window.location.origin + window.location.pathname;
     const { error } = await supa.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: 'https://pick-time-gamma.vercel.app/'
+            redirectTo: redirectUrl
         }
     });
+
     if(error){
         toast('Google 登入失敗：' + error.message);
+    }
+}
+
+function openForgotPasswordModal(){
+    closeAuthModal();
+    document.getElementById('forgotPasswordModal').style.display='flex';
+}
+
+function closeForgotPasswordModal(){
+    document.getElementById('forgotPasswordModal').style.display='none';
+}
+
+async function sendPasswordResetEmail(){
+    const email=document.getElementById('forgotEmail').value.trim();
+
+    if(!email){
+        toast('⚠️ 請輸入註冊 Email');
+        return;
+    }
+
+    try{
+        const {error}=await supa.auth.resetPasswordForEmail(email,{
+            redirectTo: window.location.origin + window.location.pathname
+        });
+
+        if(error){
+            toast('❌ 無法寄出重設信：'+error.message);
+            return;
+        }
+
+        closeForgotPasswordModal();
+        toast('📧 已寄出安全重設連結，請到信箱設定新密碼',5000);
+    }catch(e){
+        toast('❌ 密碼重設發生錯誤：'+e.message);
     }
 }
 
@@ -5721,6 +5847,7 @@ async function boot(){
 
 window.addEventListener('click',e=>{
     if(e.target===document.getElementById('authModal'))closeAuthModal();
+    if(e.target===document.getElementById('forgotPasswordModal'))closeForgotPasswordModal();
     if(e.target===document.getElementById('changePassModal'))document.getElementById('changePassModal').style.display='none';
 });
 
@@ -6284,8 +6411,32 @@ if(__plusOriginalShowView){
     };
 }
 
-boot();
-showView('home');
+boot().then(async()=>{
+    showView('home');
+
+    const authUserResult = await supa.auth.getUser();
+    const hasAuthUser = !!authUserResult?.data?.user;
+
+    if(hasAuthUser){
+        const overlay=document.getElementById('welcome-overlay');
+        if(overlay)overlay.style.display='none';
+        closeAuthModal();
+        updateLoginUI();
+        renderAll();
+    }
+
+    const hash=window.location.hash || '';
+    const search=window.location.search || '';
+    if(hash.includes('type=recovery') || search.includes('type=recovery')){
+        const overlay=document.getElementById('welcome-overlay');
+        if(overlay)overlay.style.display='none';
+        showChangePasswordModal();
+        toast('請設定你的新密碼');
+    }
+}).catch(e=>{
+    showView('home');
+    console.error(e);
+});
 </script>
 </body>
 </html>
