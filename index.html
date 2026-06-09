@@ -5901,7 +5901,7 @@ const rules={regName:/^[a-zA-Z0-9_\u4e00-\u9fa5]{3,15}$/,regEmail:/^[^\s@]+@[^\s
 function validateField(id){const el=document.getElementById(id);const err=document.getElementById('err'+id.charAt(0).toUpperCase()+id.slice(1));if(!el||!err)return true;const valid=rules[id].test(el.value);err.style.display=(el.value.length>0&&!valid)?'block':'none';return valid;}
 
 async function handleRegister(){
-    const name=document.getElementById('regName').value.trim(),email=document.getElementById('regEmail').value.trim(),pass=document.getElementById('regPass').value;
+    const name=document.getElementById('regName').value.trim(),email=document.getElementById('regEmail').value.trim().toLowerCase(),pass=document.getElementById('regPass').value;
     const phone=document.getElementById('regPhone').value.trim(),address=document.getElementById('regAddress').value.trim();
     if(!(validateField('regName')&&validateField('regEmail')&&validateField('regPass'))||!name||!email||!pass){toast('⚠️ 請填寫完整註冊資料');return;}
     const {data:authData,error:authError}=await supa.auth.signUp({email,password:pass,options:{data:{name}}});
@@ -5944,7 +5944,7 @@ function closeForgotPasswordModal(){
 }
 
 async function sendPasswordResetEmail(){
-    const email=document.getElementById('forgotEmail').value.trim();
+    const email=document.getElementById('forgotEmail').value.trim().toLowerCase();
 
     if(!email){
         toast('⚠️ 請輸入註冊 Email');
@@ -5968,21 +5968,106 @@ async function sendPasswordResetEmail(){
     }
 }
 
+function getSupabaseLoginErrorMessage(error){
+    const msg=(error?.message||'').toString();
+    const lower=msg.toLowerCase();
+    console.error('Supabase 登入失敗詳細資料：', error);
+
+    if(lower.includes('invalid login credentials')){
+        return '帳號存在，但密碼與 Supabase Authentication 目前儲存的密碼不一致。請用「忘記密碼」重設，或到 Supabase Authentication 直接更新密碼。';
+    }
+    if(lower.includes('email not confirmed') || lower.includes('confirm')){
+        return '這個 Email 還沒有完成驗證，請先到信箱點擊 Supabase 驗證信，或在 Supabase 後台手動設為 Confirmed。';
+    }
+    if(lower.includes('too many requests') || lower.includes('rate limit')){
+        return '登入嘗試太頻繁，請等幾分鐘後再試。';
+    }
+    if(lower.includes('network') || lower.includes('fetch')){
+        return '連線到 Supabase 失敗，請檢查網路、Supabase URL/API Key 是否正確。';
+    }
+    return msg ? ('登入失敗：' + msg) : '登入失敗，請稍後再試。';
+}
+
 async function handleLogin(){
-    const email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
+    const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+    const pass=document.getElementById('loginPass').value; // 重要：密碼不要 trim，避免空格被刪掉造成判斷錯誤
+
     if(!email||!pass){toast('⚠️ 請填寫帳號與密碼');return;}
     if(!checkLoginRateLimit(email))return;
-    const {data:authData,error:authError}=await supa.auth.signInWithPassword({email,password:pass});
-    if(authError||!authData?.user){recordLoginFailure(email);return;}
-    clearLoginFailure(email);
-    const metaName=authData.user.user_metadata?.name||email.split('@')[0];
-    const {data,error}=await supa.from('users').select('*').eq('id',authData.user.id).maybeSingle();
-    if(data&&!error){user={...data,avatar:(data.name||'PM').slice(0,2).toUpperCase(),coupons:typeof data.coupons==='string'?JSON.parse(data.coupons):data.coupons||defaultCoupons,addresses:typeof data.addresses==='string'?JSON.parse(data.addresses):data.addresses||[],pointsHistory:typeof data.points_history==='string'?JSON.parse(data.points_history):data.points_history||[]};}
-    else{user={id:authData.user.id,name:metaName,username:metaName,email,avatar:metaName.slice(0,2).toUpperCase(),level:'一般會員',spent:0,points:0,is_admin:authData.user.user_metadata?.is_admin===true,coupons:[...defaultCoupons],addresses:[],pointsHistory:[]};}
-    if(user?.is_admin)isAdminLoggedIn=true;
-    saveJSON(userKey,user);updateMemberUI();syncMemberForm();closeAuthModal();
-    toast('👋 歡迎回來，'+(user?.name||email)+'！');updateLoginUI();
-    if(user?.id){const {data:uo}=await supa.from('orders').select('*').eq('user_id',user.id).order('created_at',{ascending:false});if(uo&&uo.length>0){orders=uo.map(o=>({id:o.id,date:o.created_at?.slice(0,10).replace(/-/g,'/'),amount:o.total,status:o.status,payment:o.payment,paymentStatus:o.payment_status,paymentLast5:o.payment_last5,items:typeof o.items==='string'?JSON.parse(o.items):o.items||[]}));saveJSON(ordersKey,orders);updateMemberUI();}}
+
+    try{
+        const {data:authData,error:authError}=await supa.auth.signInWithPassword({email,password:pass});
+
+        if(authError||!authData?.user){
+            const friendlyMsg=getSupabaseLoginErrorMessage(authError);
+            recordLoginFailure(email);
+            setTimeout(()=>toast('❌ '+friendlyMsg,6500),250);
+            return;
+        }
+
+        clearLoginFailure(email);
+        const metaName=authData.user.user_metadata?.name||email.split('@')[0];
+        const {data,error}=await supa.from('users').select('*').eq('id',authData.user.id).maybeSingle();
+
+        if(error){
+            console.warn('會員資料讀取失敗，改用 Auth 基本資料登入：', error);
+        }
+
+        if(data&&!error){
+            user={
+                ...data,
+                avatar:(data.name||'PM').slice(0,2).toUpperCase(),
+                coupons:typeof data.coupons==='string'?JSON.parse(data.coupons):data.coupons||defaultCoupons,
+                addresses:typeof data.addresses==='string'?JSON.parse(data.addresses):data.addresses||[],
+                pointsHistory:typeof data.points_history==='string'?JSON.parse(data.points_history):data.points_history||[]
+            };
+        }else{
+            user={
+                id:authData.user.id,
+                name:metaName,
+                username:metaName,
+                email,
+                avatar:metaName.slice(0,2).toUpperCase(),
+                level:'一般會員',
+                spent:0,
+                points:0,
+                is_admin:authData.user.user_metadata?.is_admin===true,
+                coupons:[...defaultCoupons],
+                addresses:[],
+                pointsHistory:[]
+            };
+        }
+
+        if(user?.is_admin)isAdminLoggedIn=true;
+        saveJSON(userKey,user);
+        updateMemberUI();
+        syncMemberForm();
+        closeAuthModal();
+        toast('👋 歡迎回來，'+(user?.name||email)+'！');
+        updateLoginUI();
+
+        if(user?.id){
+            const {data:uo,error:ordersError}=await supa.from('orders').select('*').eq('user_id',user.id).order('created_at',{ascending:false});
+            if(ordersError){console.warn('訂單讀取失敗：',ordersError);}
+            if(uo&&uo.length>0){
+                orders=uo.map(o=>({
+                    id:o.id,
+                    date:o.created_at?.slice(0,10).replace(/-/g,'/'),
+                    amount:o.total,
+                    status:o.status,
+                    payment:o.payment,
+                    paymentStatus:o.payment_status,
+                    paymentLast5:o.payment_last5,
+                    items:typeof o.items==='string'?JSON.parse(o.items):o.items||[]
+                }));
+                saveJSON(ordersKey,orders);
+                updateMemberUI();
+            }
+        }
+    }catch(e){
+        console.error('登入流程發生例外：',e);
+        toast('❌ 登入流程發生錯誤：'+(e.message||e));
+    }
 }
 
 async function logout(){await supa.auth.signOut();user=null;isAdminLoggedIn=false;localStorage.removeItem(userKey);updateMemberUI();updateLoginUI();showView('home');toast('已成功登出');}
