@@ -5428,7 +5428,7 @@ font-size:48px}
         <div class="auth-grid">
             <input id="forgotEmail" type="email" placeholder="請輸入註冊 Email" />
             <button class="gold-btn" onclick="sendPasswordResetEmail()" style="padding:14px;font-size:15px">寄送重設連結 →</button>
-            <div class="hint">收到信後點擊連結，回到 Picktime 會出現「設定新密碼」視窗。</div>
+            <div class="hint">收到信後點擊連結，回到 Picktime 會直接出現「設定新密碼」視窗；這時不用先登入。</div>
         </div>
     </div>
 </div>
@@ -5438,7 +5438,7 @@ font-size:48px}
 <div class="modal" id="changePassModal">
     <div class="modal-card">
         <button class="modal-close" onclick="document.getElementById('changePassModal').style.display='none'">&times;</button>
-        <h3 style="margin:0 0 20px;color:var(--accent-gold)">設定新密碼</h3>
+        <h3 style="margin:0 0 10px;color:var(--accent-gold)">設定新密碼</h3><p class="hint" style="margin:0 0 16px">如果你是從 Gmail 重設連結回來，直接輸入新密碼即可，不需要先登入。</p>
         <div style="display:grid;gap:12px">
             <input id="newPass" type="password" placeholder="新密碼（至少 8 碼）" style="width:100%;padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;outline:none" />
             <input id="newPass2" type="password" placeholder="確認新密碼" style="width:100%;padding:13px 14px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;outline:none" />
@@ -5952,19 +5952,21 @@ async function sendPasswordResetEmail(){
     }
 
     try{
-        const {error}=await supa.auth.resetPasswordForEmail(email,{
-            redirectTo: window.location.origin + window.location.pathname
-        });
+        // 重要：reset=1 是給本頁判斷用；Supabase 會再把 recovery token/code 帶回來
+        const resetUrl = window.location.origin + window.location.pathname + '?reset=1';
+        const {error}=await supa.auth.resetPasswordForEmail(email,{ redirectTo: resetUrl });
 
         if(error){
-            toast('❌ 無法寄出重設信：'+error.message);
+            console.error('寄送重設密碼信失敗：', error);
+            toast('❌ 無法寄出重設信：'+error.message,6000);
             return;
         }
 
         closeForgotPasswordModal();
-        toast('📧 已寄出安全重設連結，請到信箱設定新密碼',5000);
+        toast('📧 已寄出重設連結。請到 Gmail 點信中的連結，回到本頁後會跳出「設定新密碼」。',7000);
     }catch(e){
-        toast('❌ 密碼重設發生錯誤：'+e.message);
+        console.error('密碼重設發生錯誤：', e);
+        toast('❌ 密碼重設發生錯誤：'+e.message,6000);
     }
 }
 
@@ -6072,8 +6074,70 @@ async function handleLogin(){
 
 async function logout(){await supa.auth.signOut();user=null;isAdminLoggedIn=false;localStorage.removeItem(userKey);updateMemberUI();updateLoginUI();showView('home');toast('已成功登出');}
 function updateLoginUI(){const ok=!!user;document.getElementById('navLoginBtn').classList.toggle('hide',ok);document.getElementById('navLogoutBtn').classList.toggle('hide',!ok);document.getElementById('heroMemberBtn').textContent=ok?'我的會員中心':'成為會員';}
-function showChangePasswordModal(){document.getElementById('changePassModal').style.display='flex';}
-async function changePassword(){const n1=document.getElementById('newPass').value,n2=document.getElementById('newPass2').value;if(!user){toast('請先登入');return;}if(n1.length<8){toast('❌ 新密碼需至少8個字元');return;}if(n1!==n2){toast('❌ 兩次密碼不一致');return;}const {error}=await supa.auth.updateUser({password:n1});if(error){toast('❌ 密碼更新失敗：'+error.message);return;}document.getElementById('changePassModal').style.display='none';toast('✅ 密碼已安全更新');}
+function showChangePasswordModal(){
+    const modal=document.getElementById('changePassModal');
+    if(modal)modal.style.display='flex';
+}
+
+async function changePassword(){
+    const n1=document.getElementById('newPass').value;
+    const n2=document.getElementById('newPass2').value;
+
+    if(n1.length<8){toast('❌ 新密碼需至少 8 個字元');return;}
+    if(n1!==n2){toast('❌ 兩次密碼不一致');return;}
+
+    try{
+        const {data:{session}, error:sessionError}=await supa.auth.getSession();
+        if(sessionError)console.warn('讀取 reset session 發生問題：', sessionError);
+
+        if(!session){
+            toast('❌ 重設連結已失效或網址沒有被 Supabase 允許。請重新按「忘記密碼」寄一封新的重設信。',8000);
+            return;
+        }
+
+        const {error}=await supa.auth.updateUser({password:n1});
+        if(error){
+            console.error('密碼更新失敗：', error);
+            toast('❌ 密碼更新失敗：'+error.message,7000);
+            return;
+        }
+
+        document.getElementById('changePassModal').style.display='none';
+        document.getElementById('newPass').value='';
+        document.getElementById('newPass2').value='';
+
+        // 重新讀取目前登入者，讓使用者重設完密碼後能直接進入會員狀態
+        const {data:{user:authUser}}=await supa.auth.getUser();
+        if(authUser){
+            const {data:profile}=await supa.from('users').select('*').eq('id',authUser.id).maybeSingle();
+            const metaName=authUser.user_metadata?.name||authUser.email?.split('@')[0]||'會員';
+            user=profile?{
+                ...profile,
+                avatar:(profile.name||'PM').slice(0,2).toUpperCase(),
+                coupons:typeof profile.coupons==='string'?JSON.parse(profile.coupons):profile.coupons||defaultCoupons,
+                addresses:typeof profile.addresses==='string'?JSON.parse(profile.addresses):profile.addresses||[],
+                pointsHistory:typeof profile.points_history==='string'?JSON.parse(profile.points_history):profile.points_history||[]
+            }:{
+                id:authUser.id,
+                name:metaName,
+                username:metaName,
+                email:authUser.email,
+                avatar:metaName.slice(0,2).toUpperCase(),
+                level:'一般會員',spent:0,points:0,is_admin:false,
+                coupons:[...defaultCoupons],addresses:[],pointsHistory:[]
+            };
+            saveJSON(userKey,user);
+            updateMemberUI();
+            updateLoginUI();
+        }
+
+        history.replaceState(null,'',window.location.origin+window.location.pathname);
+        toast('✅ 密碼已更新成功，之後請用新密碼登入',7000);
+    }catch(e){
+        console.error('更新密碼流程發生錯誤：', e);
+        toast('❌ 更新密碼流程發生錯誤：'+(e.message||e),7000);
+    }
+}
 
 // ─── Products ───
 function renderCategories(){document.getElementById('categoryChips').innerHTML=categories.map(cat=>`<button class="chip ${cat===selectedCategory?'active':''}" onclick="setCategory('${cat}')">${cat}</button>`).join('');}
@@ -7324,8 +7388,50 @@ function openFooterFeedbackCenter(){
     openFeedbackModal('footer');
 }
 
+async function handlePasswordRecoveryFromUrl(){
+    const hash=window.location.hash || '';
+    const search=window.location.search || '';
+    const params=new URLSearchParams(search);
+    const hashParams=new URLSearchParams(hash.replace(/^#/,''));
+    const isRecovery = search.includes('reset=1') || params.get('type')==='recovery' || hashParams.get('type')==='recovery';
+
+    // 新版 Supabase 可能回傳 ?code=xxx，需要交換成 session 後才能 updateUser({password})
+    const code=params.get('code');
+    if(code){
+        const {error}=await supa.auth.exchangeCodeForSession(code);
+        if(error){
+            console.error('交換密碼重設 code 失敗：', error);
+            toast('❌ 重設連結驗證失敗：'+error.message,7000);
+        }
+    }
+
+    if(isRecovery || code){
+        const overlay=document.getElementById('welcome-overlay');
+        if(overlay)overlay.style.display='none';
+        closeAuthModal();
+        showChangePasswordModal();
+        toast('請在這裡輸入你的新密碼，不需要先登入。',7000);
+        return true;
+    }
+    return false;
+}
+
+if(supa && supa.auth){
+    supa.auth.onAuthStateChange((event, session)=>{
+        if(event==='PASSWORD_RECOVERY'){
+            const overlay=document.getElementById('welcome-overlay');
+            if(overlay)overlay.style.display='none';
+            closeAuthModal();
+            showChangePasswordModal();
+            toast('請設定你的新密碼',7000);
+        }
+    });
+}
+
 boot().then(async()=>{
     showView('home');
+
+    await handlePasswordRecoveryFromUrl();
 
     const authUserResult = await supa.auth.getUser();
     const hasAuthUser = !!authUserResult?.data?.user;
@@ -7336,15 +7442,6 @@ boot().then(async()=>{
         closeAuthModal();
         updateLoginUI();
         renderAll();
-    }
-
-    const hash=window.location.hash || '';
-    const search=window.location.search || '';
-    if(hash.includes('type=recovery') || search.includes('type=recovery')){
-        const overlay=document.getElementById('welcome-overlay');
-        if(overlay)overlay.style.display='none';
-        showChangePasswordModal();
-        toast('請設定你的新密碼');
     }
 }).catch(e=>{
     showView('home');
