@@ -3784,6 +3784,7 @@ font-size:48px}
             gap:12px
         }
         .feedback-body input,
+        .feedback-body select,
         .feedback-body textarea{
             width:100%;
             border-radius:14px;
@@ -3792,6 +3793,9 @@ font-size:48px}
             color:#fff;
             padding:12px 14px;
             outline:none
+        }
+        .feedback-body select option{
+            background:#1e293b;
         }
         .feedback-body textarea{
             min-height:120px;
@@ -3883,6 +3887,332 @@ font-size:48px}
         }
 
 
+        /* ─── Bottom-right Shopping App Customer Tools 2026 ─── */
+        .quick-floating{
+            position:fixed;
+            right:24px;
+            bottom:24px;
+            z-index:2550;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+            align-items:flex-end;
+            pointer-events:auto;
+        }
+        .quick-floating button{
+            min-width:124px;
+            border:none;
+            border-radius:999px;
+            padding:12px 16px;
+            background:rgba(15,23,42,.96);
+            color:#fff;
+            border:1px solid rgba(196,164,132,.34);
+            box-shadow:0 14px 38px rgba(0,0,0,.42);
+            font-weight:900;
+            cursor:pointer;
+            transition:.22s;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            backdrop-filter:blur(14px);
+        }
+        .quick-floating button:hover,
+        .quick-floating button.active{
+            transform:translateY(-2px);
+            background:var(--accent-gold);
+            color:#0f172a;
+            border-color:var(--accent-gold);
+        }
+        .quick-panel-window{
+            position:fixed;
+            right:170px;
+            bottom:24px;
+            width:min(430px,calc(100vw - 32px));
+            max-height:calc(100vh - 150px);
+            overflow:hidden;
+            z-index:2560;
+            display:none;
+            background:rgba(15,23,42,.98);
+            border:1px solid rgba(196,164,132,.35);
+            border-radius:26px;
+            box-shadow:0 24px 90px rgba(0,0,0,.6);
+            backdrop-filter:blur(18px);
+        }
+        .quick-panel-window.open{
+            display:flex;
+            flex-direction:column;
+            animation:quickPanelIn .24s ease;
+        }
+        @keyframes quickPanelIn{
+            from{opacity:0;transform:translateY(14px) scale(.98)}
+            to{opacity:1;transform:translateY(0) scale(1)}
+        }
+        .quick-panel-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            padding:18px 20px;
+            border-bottom:1px solid rgba(255,255,255,.08);
+        }
+        .quick-panel-title{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:var(--accent-gold);
+            font-weight:900;
+            letter-spacing:1px;
+        }
+        .quick-panel-close{
+            width:34px;
+            height:34px;
+            border-radius:50%;
+            border:1px solid rgba(255,255,255,.13);
+            background:rgba(255,255,255,.05);
+            color:#fff;
+            cursor:pointer;
+            font-size:18px;
+        }
+        .quick-panel-body{
+            padding:18px 20px 20px;
+            overflow-y:auto;
+            display:grid;
+            gap:12px;
+        }
+        .quick-tabs{
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:8px;
+        }
+        .quick-tabs button{
+            border:1px solid var(--glass-border);
+            background:rgba(255,255,255,.04);
+            color:#fff;
+            border-radius:13px;
+            padding:9px 8px;
+            cursor:pointer;
+            font-size:12px;
+            font-weight:800;
+        }
+        .quick-tabs button.active{
+            border-color:var(--accent-gold);
+            color:var(--accent-gold);
+            background:rgba(196,164,132,.1);
+        }
+        .quick-form{
+            display:grid;
+            gap:10px;
+        }
+        .quick-form input,
+        .quick-form select,
+        .quick-form textarea{
+            width:100%;
+            background:rgba(255,255,255,.05);
+            border:1px solid var(--glass-border);
+            color:#fff;
+            border-radius:14px;
+            padding:12px 13px;
+            outline:none;
+        }
+        .quick-form textarea{min-height:105px;resize:vertical}
+        .quick-form input:focus,
+        .quick-form select:focus,
+        .quick-form textarea:focus{border-color:var(--accent-gold)}
+        .quick-form select option{background:#1e293b}
+        .quick-help-card{
+            display:flex;
+            gap:12px;
+            align-items:flex-start;
+            background:rgba(255,255,255,.035);
+            border:1px solid rgba(255,255,255,.07);
+            border-radius:16px;
+            padding:12px 14px;
+        }
+        .quick-help-card strong{display:block;font-size:13px;margin-bottom:3px;color:#fff}
+        .quick-help-card p{margin:0;color:var(--text-dim);font-size:12px;line-height:1.6}
+        .quick-rating-row{
+            display:flex;
+            gap:7px;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+        .quick-star{
+            width:38px;
+            height:38px;
+            border-radius:13px;
+            border:1px solid var(--glass-border);
+            background:rgba(255,255,255,.05);
+            color:#ffd37b;
+            cursor:pointer;
+            font-size:18px;
+            transition:.2s;
+        }
+        .quick-star.active,
+        .quick-star:hover{
+            border-color:var(--accent-gold);
+            background:rgba(196,164,132,.16);
+        }
+        .quick-tags{
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+        }
+        .quick-tag{
+            border:1px solid rgba(255,255,255,.12);
+            background:rgba(255,255,255,.04);
+            color:var(--text-dim);
+            border-radius:999px;
+            padding:7px 10px;
+            font-size:12px;
+            cursor:pointer;
+        }
+        .quick-tag.active{
+            border-color:var(--accent-gold);
+            color:var(--accent-gold);
+            background:rgba(196,164,132,.1);
+        }
+        .quick-ticket-result{
+            display:none;
+            padding:12px 14px;
+            border-radius:15px;
+            border:1px solid rgba(74,222,128,.25);
+            background:rgba(74,222,128,.07);
+            color:#c8ffd8;
+            font-size:12px;
+            line-height:1.7;
+        }
+        .quick-ticket-result.show{display:block}
+        .quick-review-mini{
+            display:grid;
+            gap:8px;
+        }
+        .quick-review-item{
+            padding:10px 12px;
+            border-radius:14px;
+            background:rgba(255,255,255,.03);
+            border:1px solid rgba(255,255,255,.06);
+        }
+        .quick-review-item div:first-child{
+            display:flex;
+            justify-content:space-between;
+            gap:8px;
+            font-size:12px;
+            font-weight:800;
+        }
+        .quick-review-item p{
+            margin:5px 0 0;
+            color:var(--text-dim);
+            font-size:12px;
+            line-height:1.55;
+        }
+        .floating-feedback{display:none !important;}
+        @media(max-width:700px){
+            .quick-floating{right:14px;bottom:14px;gap:8px}
+            .quick-floating button{min-width:auto;padding:11px 13px;font-size:13px}
+            .quick-panel-window{right:14px;left:14px;bottom:78px;width:auto;max-height:calc(100vh - 120px)}
+        }
+
+
+
+
+
+        /* ─── Compact Footer Feedback Window Fix ─── */
+        .quick-floating,
+        .quick-panel-window{
+            display:none !important;
+            visibility:hidden !important;
+            pointer-events:none !important;
+        }
+        .feedback-window{
+            right:24px !important;
+            bottom:24px !important;
+            width:min(360px,calc(100vw - 28px)) !important;
+            max-height:min(74vh,560px) !important;
+            display:none;
+            flex-direction:column;
+            overflow:hidden !important;
+            border-radius:22px !important;
+        }
+        .feedback-window.open{
+            display:flex !important;
+        }
+        .feedback-head{
+            position:sticky;
+            top:0;
+            z-index:5;
+            flex-shrink:0;
+            padding:12px 14px !important;
+            background:rgba(15,23,42,.99);
+            border-bottom:1px solid rgba(255,255,255,.08);
+        }
+        .feedback-head h3{
+            font-size:15px !important;
+        }
+        .feedback-close{
+            width:38px !important;
+            height:38px !important;
+            min-width:38px !important;
+            display:inline-flex !important;
+            align-items:center;
+            justify-content:center;
+            font-size:22px !important;
+            line-height:1;
+            border-color:rgba(196,164,132,.45) !important;
+            color:#fff !important;
+        }
+        .feedback-close:hover{
+            background:var(--accent-gold) !important;
+            color:#0f172a !important;
+        }
+        .feedback-body{
+            padding:13px 14px 16px !important;
+            gap:9px !important;
+            overflow-y:auto !important;
+            max-height:calc(min(74vh,560px) - 63px) !important;
+            scrollbar-width:thin;
+        }
+        .feedback-body input,
+        .feedback-body select,
+        .feedback-body textarea{
+            padding:10px 12px !important;
+            border-radius:12px !important;
+            font-size:13px !important;
+        }
+        .feedback-body textarea{
+            min-height:82px !important;
+            max-height:125px !important;
+        }
+        .rating-picker{
+            gap:7px !important;
+        }
+        .rating-picker button{
+            width:38px !important;
+            height:38px !important;
+            border-radius:12px !important;
+            font-size:18px !important;
+        }
+        .feedback-body .quick-tag{
+            padding:6px 9px !important;
+            font-size:12px !important;
+        }
+        .feedback-body .gold-btn,
+        .feedback-body .ghost-btn{
+            padding:12px 14px !important;
+            border-radius:14px !important;
+        }
+        @media(max-width:700px){
+            .feedback-window{
+                right:10px !important;
+                left:10px !important;
+                bottom:14px !important;
+                width:auto !important;
+                max-height:72vh !important;
+            }
+            .feedback-body{
+                max-height:calc(72vh - 63px) !important;
+            }
+        }
 
         /* ─── Header Search Layout Fix 2026 ─── */
         header{
@@ -4084,8 +4414,6 @@ font-size:48px}
             <button class="nav-btn" data-nav="faq" onclick="showView('faq')">❓ FAQ</button>
             <button class="nav-btn" data-nav="benefits" onclick="showView('benefits')">🎁 會員優惠</button>
             <button class="nav-btn" data-nav="aftersales" onclick="showView('aftersales')">🛡️ 售後</button>
-            <button class="nav-btn" data-nav="support" onclick="showView('support')">💬 客服</button>
-            <button class="nav-btn" data-nav="contact" onclick="showView('contact')">📩 聯絡</button>
             <button class="nav-btn" id="navLoginBtn" onclick="openAuthModal()">登入 / 註冊</button>
             <button class="nav-btn" id="navAdminBtn" onclick="openAdminLogin()" style="border-color:rgba(196,164,132,.4);color:rgba(196,164,132,.8);font-size:13px">⚙️ 後台</button>
             <button class="nav-btn danger-btn hide" id="navLogoutBtn" onclick="logout()" style="border:none">登出</button>
@@ -4677,7 +5005,7 @@ font-size:48px}
 <section class="section" data-view="contact">
     <div class="section-title">
         <h2>📩 聯絡我們</h2>
-        <p>展示型表單，不會真的寄出資料</p>
+        <p>可直接開啟 Email 聯絡管理員客服信箱</p>
     </div>
     <div class="contact-layout">
         <div class="contact-card">
@@ -4704,7 +5032,7 @@ font-size:48px}
                 </div>
             </div>
             <div class="admin-demo-note">
-                展示說明：此 Contact 表單會進行前端驗證，送出後以 Toast 顯示成功訊息，可在答辯時說明為未來串接 Email API 或 Supabase 資料表的入口。
+                客服中心指定管理員信箱：kennethleejj@gmail.com。送出表單後會開啟使用者電腦或手機的 Email/Gmail，方便顧客直接寄給管理員。
             </div>
         </div>
         <div class="contact-card">
@@ -4720,7 +5048,7 @@ font-size:48px}
                     <option value="專題展示">專題展示</option>
                 </select>
                 <textarea id="contactMessage" placeholder="請輸入你的問題或建議"></textarea>
-                <button class="gold-btn" onclick="submitContactForm()">送出訊息</button>
+                <button class="gold-btn" onclick="submitContactForm()">開啟 Email 聯絡管理員</button>
             </div>
         </div>
     </div>
@@ -4961,9 +5289,9 @@ font-size:48px}
         </div>
         <div class="footer-col">
             <h4>聯絡我們</h4>
-            <a href="#">客服中心</a>
-            <a href="#">常見問題</a>
-            <a href="#">意見回饋</a>
+            <a onclick="openFooterSupportCenter()">客服中心</a>
+            <a onclick="openFooterFaqCenter()">常見問題</a>
+            <a onclick="openFooterFeedbackCenter()">意見回饋</a>
         </div>
     </div>
     <div>© 2026 Picktime 拾光機 · 黎明技術學院 · 保留所有權利</div>
@@ -5043,6 +5371,8 @@ font-size:48px}
 
 
 
+<!-- Bottom-right Quick Actions removed: footer links now open these functions instead. -->
+
 <!-- Feedback Floating Window -->
 <button class="floating-feedback" onclick="openFeedbackModal('general')">⭐ 意見回饋</button>
 <div class="feedback-window" id="feedbackWindow">
@@ -5053,6 +5383,16 @@ font-size:48px}
     <div class="feedback-body">
         <input id="feedbackName" placeholder="你的姓名 / 暱稱" />
         <input id="feedbackEmail" placeholder="Email（選填，方便我們回覆）" />
+        <select id="feedbackCategory">
+            <option value="整體使用體驗">整體使用體驗</option>
+            <option value="客服中心">客服中心</option>
+            <option value="常見問題">常見問題</option>
+            <option value="商品圖片 / 商品資訊">商品圖片 / 商品資訊</option>
+            <option value="購物車 / 結帳流程">購物車 / 結帳流程</option>
+            <option value="付款 / 物流配送">付款 / 物流配送</option>
+            <option value="退換貨 / 售後服務">退換貨 / 售後服務</option>
+            <option value="會員 / 優惠券">會員 / 優惠券</option>
+        </select>
         <div>
             <div class="hint" style="margin-bottom:8px">請給 Picktime 一個評分</div>
             <div class="rating-picker" id="feedbackRatingPicker">
@@ -5063,9 +5403,23 @@ font-size:48px}
                 <button onclick="setFeedbackRating(5)">★</button>
             </div>
         </div>
-        <textarea id="feedbackMessage" placeholder="請寫下你的意見，例如：商品、客服、頁面操作、優惠、售後服務可以怎麼改善..."></textarea>
-        <button class="gold-btn" onclick="submitFeedback()">送出回饋</button>
-        <p class="hint">展示版會將回饋暫存在瀏覽器 localStorage，也可以延伸成後台資料表或寄送到 Gmail。</p>
+        <div>
+            <div class="hint" style="margin-bottom:8px">快速選擇回饋項目</div>
+            <div class="quick-tags" id="feedbackTagBox">
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'客服回覆快')">客服回覆快</button>
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'客服資訊清楚')">客服資訊清楚</button>
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'FAQ 有幫助')">FAQ 有幫助</button>
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'商品好找')">商品好找</button>
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'結帳方便')">結帳方便</button>
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'希望更多付款方式')">希望更多付款方式</button>
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'物流說明不足')">物流說明不足</button>
+                <button type="button" class="quick-tag" onclick="toggleFeedbackTag(this,'畫面操作卡卡')">畫面操作卡卡</button>
+            </div>
+        </div>
+        <textarea id="feedbackMessage" placeholder="請寫下你的意見，例如：客服、常見問題、商品頁、購物車、結帳、物流、售後服務可以怎麼改善..."></textarea>
+        <button class="gold-btn" onclick="submitFeedback(false)">送出回饋</button>
+        <button class="ghost-btn" onclick="submitFeedback(true)">送出並開啟 Email 給管理員</button>
+        <p class="hint">回饋會暫存在瀏覽器 localStorage；若選擇 Email，會自動帶入管理員信箱 kennethleejj@gmail.com。</p>
     </div>
 </div>
 
@@ -5202,38 +5556,38 @@ const productReviews = {
 
 // ─── Products Data ───
 const products = [
-    { id:1,  name:'極簡黑釉腕錶',         price:12800, originalPrice:15800, img:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80', emoji:'⌚', category:'配件',  rating:4.9, sold:320,  desc:'質感黑金風格，316L不鏽鋼錶帶，50米防水，適合日常與正式穿搭。', badge:'hot' },
-    { id:2,  name:'拾光降噪耳機',         price:8500,  originalPrice:9800,  img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80', emoji:'🎧', category:'3C',   rating:4.8, sold:580,  desc:'主動降噪技術，40小時續航，通勤讀書遊戲都能安心使用。', badge:'sale' },
-    { id:3,  name:'商務霧黑筆電',         price:42900, originalPrice:45900, img:'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80', emoji:'💻', category:'3C',   rating:4.7, sold:210,  desc:'Intel i7 第13代、16GB RAM、512GB SSD，高效工作與學習首選。', badge:'hot' },
-    { id:4,  name:'恆久經典鋼筆',         price:3200,  originalPrice:3200,  img:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=900&q=80', emoji:'✒️', category:'文具', rating:4.9, sold:450,  desc:'18K金筆尖、德國進口墨水，適合筆記、簽名與高端禮盒贈送。', badge:'' },
-    { id:5,  name:'微光智能手環',         price:3990,  originalPrice:4900,  img:'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=900&q=80', emoji:'⌚', category:'穿戴', rating:4.6, sold:890,  desc:'健康監測、運動記錄、睡眠分析，輕薄舒適 7 天長效續航。', badge:'sale' },
-    { id:6,  name:'沉靜擴香組',           price:1680,  originalPrice:1800,  img:'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=900&q=80', emoji:'🕯️', category:'生活', rating:4.8, sold:1200, desc:'法國 Grasse 進口香精，30ml 精油＋擴香棒組合，營造空間放鬆儀式感。', badge:'' },
-    { id:7,  name:'光影攝影背包',         price:5200,  originalPrice:5600,  img:'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80', emoji:'🎒', category:'配件', rating:4.7, sold:380,  desc:'防潑水材質，15.6吋筆電隔層，相機收納隔板，通勤旅行都方便。', badge:'' },
-    { id:8,  name:'星河無線滑鼠',         price:890,   originalPrice:990,   img:'https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=900&q=80', emoji:'🖱️', category:'3C',   rating:4.5, sold:2100, desc:'2.4G 無線、靜音按鍵、1600 DPI，輕巧好握適合辦公上課。', badge:'' },
-    { id:9,  name:'晨光瑜伽墊',           price:1290,  originalPrice:1290,  img:'https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&w=900&q=80', emoji:'🧘', category:'運動', rating:4.7, sold:650,  desc:'天然橡膠材質、防滑紋路設計，6mm 厚度舒適支撐，附背包帶。', badge:'new' },
-    { id:10, name:'職人皮革錢包',         price:2480,  originalPrice:2480,  img:'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=900&q=80', emoji:'👝', category:'配件', rating:4.8, sold:430,  desc:'義大利植鞣革、手工縫線，8 卡位＋票卡夾層，新年禮盒首選。', badge:'new' },
-    { id:11, name:'北歐桌上型燈具',       price:1890,  originalPrice:2200,  img:'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=80', emoji:'💡', category:'生活', rating:4.6, sold:310,  desc:'無段式調光、色溫可調3檔，USB-C 供電，護眼認證適合閱讀。', badge:'sale' },
-    { id:12, name:'旅行保溫瓶',           price:980,   originalPrice:980,   img:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=900&q=80', emoji:'🍶', category:'生活', rating:4.7, sold:1800, desc:'316 不鏽鋼雙層真空，保溫 24h 保冷 36h，500ml 輕量設計。', badge:'' },
-    { id:13, name:'藍牙鍵盤 TKL',         price:2390,  originalPrice:2390,  img:'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=900&q=80', emoji:'⌨️', category:'3C',   rating:4.6, sold:280,  desc:'矮軸機械式、三模連接（藍牙/無線/有線），白色 LED 背光。', badge:'new' },
-    { id:14, name:'簡約針織毛衣',         price:1580,  originalPrice:1980,  img:'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=900&q=80', emoji:'👕', category:'時尚', rating:4.5, sold:920,  desc:'100% 美麗諾羊毛，寬鬆版型，莫蘭迪色系，秋冬百搭款。', badge:'sale' },
-    { id:15, name:'手沖咖啡禮盒組',       price:2180,  originalPrice:2180,  img:'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=900&q=80', emoji:'☕', category:'美食', rating:4.9, sold:760,  desc:'精品咖啡豆 200g＋手沖壺＋濾杯＋濾紙組合，送禮自用都合適。', badge:'' },
-    { id:16, name:'植物系護膚套組',       price:2890,  originalPrice:3200,  img:'https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=900&q=80', emoji:'🌿', category:'美妝', rating:4.7, sold:540,  desc:'玻尿酸精華液＋保濕乳液＋防曬霜，敏感肌膚可用，全成分揭露。', badge:'sale' },
-    { id:17, name:'電競機械鍵盤',         price:3490,  originalPrice:3490,  img:'https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=900&q=80', emoji:'🎮', category:'3C',   rating:4.8, sold:410,  desc:'Cherry MX 紅軸、RGB 全鍵自定義，N-Key Rollover 防衝突。', badge:'hot' },
-    { id:18, name:'輕量跑步運動鞋',       price:3280,  originalPrice:3280,  img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80', emoji:'👟', category:'運動', rating:4.6, sold:1100, desc:'氮氣中底緩震科技，透氣網眼鞋面，適合長跑訓練與日常穿搭。', badge:'new' },
+    { id:1,  name:'極簡黑釉腕錶',         price:12800, originalPrice:15800, img:'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&w=1200&q=85', emoji:'⌚', category:'配件',  rating:4.9, sold:320,  desc:'質感黑金風格，316L不鏽鋼錶帶，50米防水，適合日常與正式穿搭。', badge:'hot' },
+    { id:2,  name:'拾光降噪耳機',         price:8500,  originalPrice:9800,  img:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1200&q=85', emoji:'🎧', category:'3C',   rating:4.8, sold:580,  desc:'主動降噪技術，40小時續航，通勤讀書遊戲都能安心使用。', badge:'sale' },
+    { id:3,  name:'商務霧黑筆電',         price:42900, originalPrice:45900, img:'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1200&q=85', emoji:'💻', category:'3C',   rating:4.7, sold:210,  desc:'Intel i7 第13代、16GB RAM、512GB SSD，高效工作與學習首選。', badge:'hot' },
+    { id:4,  name:'恆久經典鋼筆',         price:3200,  originalPrice:3200,  img:'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=85', emoji:'✒️', category:'文具', rating:4.9, sold:450,  desc:'18K金筆尖、德國進口墨水，適合筆記、簽名與高端禮盒贈送。', badge:'' },
+    { id:5,  name:'微光智能手環',         price:3990,  originalPrice:4900,  img:'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&w=1200&q=85', emoji:'⌚', category:'穿戴', rating:4.6, sold:890,  desc:'健康監測、運動記錄、睡眠分析，輕薄舒適 7 天長效續航。', badge:'sale' },
+    { id:6,  name:'沉靜擴香組',           price:1680,  originalPrice:1800,  img:'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1200&q=85', emoji:'🕯️', category:'生活', rating:4.8, sold:1200, desc:'法國 Grasse 進口香精，30ml 精油＋擴香棒組合，營造空間放鬆儀式感。', badge:'' },
+    { id:7,  name:'光影攝影背包',         price:5200,  originalPrice:5600,  img:'https://images.unsplash.com/photo-1547949003-9792a18a2601?auto=format&fit=crop&w=1200&q=85', emoji:'🎒', category:'配件', rating:4.7, sold:380,  desc:'防潑水材質，15.6吋筆電隔層，相機收納隔板，通勤旅行都方便。', badge:'' },
+    { id:8,  name:'星河無線滑鼠',         price:890,   originalPrice:990,   img:'https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=1200&q=85', emoji:'🖱️', category:'3C',   rating:4.5, sold:2100, desc:'2.4G 無線、靜音按鍵、1600 DPI，輕巧好握適合辦公上課。', badge:'' },
+    { id:9,  name:'晨光瑜伽墊',           price:1290,  originalPrice:1290,  img:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=85', emoji:'🧘', category:'運動', rating:4.7, sold:650,  desc:'天然橡膠材質、防滑紋路設計，6mm 厚度舒適支撐，附背包帶。', badge:'new' },
+    { id:10, name:'職人皮革錢包',         price:2480,  originalPrice:2480,  img:'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85', emoji:'👝', category:'配件', rating:4.8, sold:430,  desc:'義大利植鞣革、手工縫線，8 卡位＋票卡夾層，新年禮盒首選。', badge:'new' },
+    { id:11, name:'北歐桌上型燈具',       price:1890,  originalPrice:2200,  img:'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=85', emoji:'💡', category:'生活', rating:4.6, sold:310,  desc:'無段式調光、色溫可調3檔，USB-C 供電，護眼認證適合閱讀。', badge:'sale' },
+    { id:12, name:'旅行保溫瓶',           price:980,   originalPrice:980,   img:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=1200&q=85', emoji:'🍶', category:'生活', rating:4.7, sold:1800, desc:'316 不鏽鋼雙層真空，保溫 24h 保冷 36h，500ml 輕量設計。', badge:'' },
+    { id:13, name:'藍牙鍵盤 TKL',         price:2390,  originalPrice:2390,  img:'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&w=1200&q=85', emoji:'⌨️', category:'3C',   rating:4.6, sold:280,  desc:'矮軸機械式、三模連接（藍牙/無線/有線），白色 LED 背光。', badge:'new' },
+    { id:14, name:'UNIQLO 可機洗米蘭羅紋圓領針織衫', price:990, originalPrice:990, img:'https://image.uniqlo.com/UQ/ST3/tw/imagesgoods/481722/item/twgoods_31_481722_3x4.jpg?width=1200', emoji:'👕', category:'時尚', rating:4.7, sold:920, desc:'參考 UNIQLO 台灣目前販售款：可機洗、米蘭羅紋、圓領長袖，商品編號 481722，適合作為真實電商商品展示。', badge:'sale', productUrl:'https://www.uniqlo.com/tw/zh_TW/product-detail.html?productCode=u0000000052713' },
+    { id:15, name:'手沖咖啡禮盒組',       price:2180,  originalPrice:2180,  img:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85', emoji:'☕', category:'美食', rating:4.9, sold:760,  desc:'精品咖啡豆 200g＋手沖壺＋濾杯＋濾紙組合，送禮自用都合適。', badge:'' },
+    { id:16, name:'植物系護膚套組',       price:2890,  originalPrice:3200,  img:'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=85', emoji:'🌿', category:'美妝', rating:4.7, sold:540,  desc:'玻尿酸精華液＋保濕乳液＋防曬霜，敏感肌膚可用，全成分揭露。', badge:'sale' },
+    { id:17, name:'電競機械鍵盤',         price:3490,  originalPrice:3490,  img:'https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=1200&q=85', emoji:'🎮', category:'3C',   rating:4.8, sold:410,  desc:'Cherry MX 紅軸、RGB 全鍵自定義，N-Key Rollover 防衝突。', badge:'hot' },
+    { id:18, name:'輕量跑步運動鞋',       price:3280,  originalPrice:3280,  img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=85', emoji:'👟', category:'運動', rating:4.6, sold:1100, desc:'氮氣中底緩震科技，透氣網眼鞋面，適合長跑訓練與日常穿搭。', badge:'new' },
 
     // 運動潮流系列：版型與商品分類參考 Nike / Adidas 等運動品牌的電商展示方式，圖片使用公開商品情境圖，不使用官方商標或 Logo。
-    { id:19, name:'Air Runner 緩震跑鞋',  price:3980,  originalPrice:4680,  img:'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=900&q=80', emoji:'👟', category:'鞋款', rating:4.8, sold:980,  desc:'靈感來自經典氣墊跑鞋輪廓，輕量網布鞋面＋高回彈中底，適合慢跑與日常穿搭。', badge:'new' },
-    { id:20, name:'Court Classic 復古板鞋', price:2980, originalPrice:3480, img:'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=900&q=80', emoji:'👟', category:'鞋款', rating:4.7, sold:1320, desc:'參考復古網球鞋與板鞋線條，低筒百搭版型，皮革鞋面好清潔。', badge:'hot' },
-    { id:21, name:'Boost Walk 城市休閒鞋', price:3580, originalPrice:4280, img:'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=900&q=80', emoji:'👟', category:'鞋款', rating:4.8, sold:870,  desc:'柔軟腳感與穩定支撐兼具，適合通勤、逛街與長時間站立。', badge:'sale' },
-    { id:22, name:'Samba Style 德訓休閒鞋', price:3180, originalPrice:3680, img:'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=900&q=80', emoji:'👟', category:'鞋款', rating:4.6, sold:760, desc:'復古德訓鞋風格，薄底鞋型、麂皮拼接設計，搭配牛仔褲或寬褲都好看。', badge:'new' },
-    { id:23, name:'AeroFlex 排汗訓練上衣', price:1280, originalPrice:1580, img:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80', emoji:'👕', category:'服飾', rating:4.7, sold:1180, desc:'快乾排汗布料，肩線活動剪裁，健身、跑步、球類訓練都適合。', badge:'sale' },
-    { id:24, name:'Club Fleece 連帽外套', price:2380, originalPrice:2880, img:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=80', emoji:'🧥', category:'服飾', rating:4.8, sold:620, desc:'厚磅刷毛與寬鬆版型，適合秋冬通勤與運動後保暖。', badge:'hot' },
-    { id:25, name:'Track Pro 運動長褲',    price:1980, originalPrice:2380, img:'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=900&q=80', emoji:'👖', category:'服飾', rating:4.6, sold:540, desc:'彈性腰頭、縮口褲管與拉鍊口袋，訓練與日常穿搭兩用。', badge:'' },
-    { id:26, name:'Dri-Fit 球隊訓練短褲', price:1180, originalPrice:1480, img:'https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80', emoji:'🩳', category:'服飾', rating:4.5, sold:830, desc:'輕量網眼布料，側邊開衩提高活動度，籃球、重訓與跑步都合適。', badge:'new' },
-    { id:27, name:'Performance 運動行李袋', price:1880, originalPrice:2280, img:'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=80', emoji:'🎒', category:'包款', rating:4.7, sold:390, desc:'獨立鞋袋、防潑水外層、大容量主袋，健身房與短途旅行都方便。', badge:'' },
-    { id:28, name:'Elite 訓練後背包',      price:2580, originalPrice:2980, img:'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=900&q=80', emoji:'🎒', category:'包款', rating:4.8, sold:450, desc:'筆電隔層、濕物分離袋與防盜側袋，適合學生與上班族。', badge:'sale' },
-    { id:29, name:'Grip Pro 運動襪三入組', price:590,  originalPrice:790,  img:'https://images.unsplash.com/photo-1580906853203-f2aa0530a407?auto=format&fit=crop&w=900&q=80', emoji:'🧦', category:'配件', rating:4.6, sold:2100, desc:'足弓支撐與加厚腳跟，長時間運動也能保持舒適。', badge:'hot' },
-    { id:30, name:'Hydro Sport 運動水壺',  price:690,  originalPrice:890,  img:'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=80', emoji:'🥤', category:'配件', rating:4.5, sold:1680, desc:'單手開蓋、刻度容量標示與防漏設計，運動與上課都好帶。', badge:'new' },
+    { id:19, name:'Air Runner 緩震跑鞋',  price:3980,  originalPrice:4680,  img:'https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1200&q=85', emoji:'👟', category:'鞋款', rating:4.8, sold:980,  desc:'靈感來自經典氣墊跑鞋輪廓，輕量網布鞋面＋高回彈中底，適合慢跑與日常穿搭。', badge:'new' },
+    { id:20, name:'Court Classic 復古板鞋', price:2980, originalPrice:3480, img:'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=1200&q=85', emoji:'👟', category:'鞋款', rating:4.7, sold:1320, desc:'參考復古網球鞋與板鞋線條，低筒百搭版型，皮革鞋面好清潔。', badge:'hot' },
+    { id:21, name:'Boost Walk 城市休閒鞋', price:3580, originalPrice:4280, img:'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=1200&q=85', emoji:'👟', category:'鞋款', rating:4.8, sold:870,  desc:'柔軟腳感與穩定支撐兼具，適合通勤、逛街與長時間站立。', badge:'sale' },
+    { id:22, name:'Samba Style 德訓休閒鞋', price:3180, originalPrice:3680, img:'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=1200&q=85', emoji:'👟', category:'鞋款', rating:4.6, sold:760, desc:'復古德訓鞋風格，薄底鞋型、麂皮拼接設計，搭配牛仔褲或寬褲都好看。', badge:'new' },
+    { id:23, name:'AeroFlex 排汗訓練上衣', price:1280, originalPrice:1580, img:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1200&q=85', emoji:'👕', category:'服飾', rating:4.7, sold:1180, desc:'快乾排汗布料，肩線活動剪裁，健身、跑步、球類訓練都適合。', badge:'sale' },
+    { id:24, name:'Club Fleece 連帽外套', price:2380, originalPrice:2880, img:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85', emoji:'🧥', category:'服飾', rating:4.8, sold:620, desc:'厚磅刷毛與寬鬆版型，適合秋冬通勤與運動後保暖。', badge:'hot' },
+    { id:25, name:'Track Pro 運動長褲',    price:1980, originalPrice:2380, img:'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85', emoji:'👖', category:'服飾', rating:4.6, sold:540, desc:'彈性腰頭、縮口褲管與拉鍊口袋，訓練與日常穿搭兩用。', badge:'' },
+    { id:26, name:'Dri-Fit 球隊訓練短褲', price:1180, originalPrice:1480, img:'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=1200&q=85', emoji:'🩳', category:'服飾', rating:4.5, sold:830, desc:'輕量網眼布料，側邊開衩提高活動度，籃球、重訓與跑步都合適。', badge:'new' },
+    { id:27, name:'Performance 運動行李袋', price:1880, originalPrice:2280, img:'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?auto=format&fit=crop&w=1200&q=85', emoji:'🎒', category:'包款', rating:4.7, sold:390, desc:'獨立鞋袋、防潑水外層、大容量主袋，健身房與短途旅行都方便。', badge:'' },
+    { id:28, name:'Elite 訓練後背包',      price:2580, originalPrice:2980, img:'https://images.unsplash.com/photo-1622560480605-d83c853bc5c3?auto=format&fit=crop&w=1200&q=85', emoji:'🎒', category:'包款', rating:4.8, sold:450, desc:'筆電隔層、濕物分離袋與防盜側袋，適合學生與上班族。', badge:'sale' },
+    { id:29, name:'Grip Pro 運動襪三入組', price:590,  originalPrice:790,  img:'https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?auto=format&fit=crop&w=1200&q=85', emoji:'🧦', category:'配件', rating:4.6, sold:2100, desc:'足弓支撐與加厚腳跟，長時間運動也能保持舒適。', badge:'hot' },
+    { id:30, name:'Hydro Sport 運動水壺',  price:690,  originalPrice:890,  img:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=1200&q=85', emoji:'🥤', category:'配件', rating:4.5, sold:1680, desc:'單手開蓋、刻度容量標示與防漏設計，運動與上課都好帶。', badge:'new' },
 ];
 
 const categories = ['全部','3C','配件','文具','穿戴','生活','時尚','運動','鞋款','服飾','包款','美食','美妝'];
@@ -5274,7 +5628,7 @@ function productMedia(p, extraClass=''){
     const emoji=p.emoji || '🛍️';
     const name=(p.name || 'Picktime 商品').replace(/"/g,'&quot;');
     if(isImageUrl(p.img)){
-        return `<img class="product-photo ${extraClass}" src="${p.img}" alt="${name}" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<div class=&quot;product-photo-fallback&quot;>${emoji}<div class=&quot;product-photo-name&quot;>${name}</div></div>'">`;
+        return `<img class="product-photo ${extraClass}" src="${p.img}" alt="${name}" loading="lazy" onerror="this.outerHTML='<div class=&quot;product-photo-fallback&quot;>${emoji}<div class=&quot;product-photo-name&quot;>${name}</div></div>'">`;
     }
     return `<div class="product-photo-fallback">${p.img || emoji}<div class="product-photo-name">${name}</div></div>`;
 }
@@ -6003,6 +6357,7 @@ function toggleFaq(index){
 function submitContactForm(){
     const name=document.getElementById('contactName').value.trim();
     const email=document.getElementById('contactEmail').value.trim();
+    const type=document.getElementById('contactType').value;
     const msg=document.getElementById('contactMessage').value.trim();
     if(!name||!email||!msg){
         toast('請完整填寫姓名、Email 與訊息');
@@ -6012,10 +6367,10 @@ function submitContactForm(){
         toast('請輸入正確 Email 格式');
         return;
     }
-    document.getElementById('contactName').value='';
-    document.getElementById('contactEmail').value='';
-    document.getElementById('contactMessage').value='';
-    toast('✅ 訊息已送出，這是展示版表單');
+    const subject=`Picktime 聯絡我們｜${type}｜${name}`;
+    const body=`管理員您好：\n\n我是 ${name}\nEmail：${email}\n聯絡類型：${type}\n\n訊息內容：\n${msg}\n\n---\n此信件由 Picktime 聯絡我們表單產生。`;
+    location.href=`mailto:${PICKTIME_OWNER_GMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    toast('📧 已開啟 Email，收件人是管理員客服信箱');
 }
 
 function subscribeNewsletter(){
@@ -6106,6 +6461,7 @@ const feedbackKey = 'picktime_feedbacks';
 const afterSalesKey = 'picktime_after_sales_requests';
 let feedbackRating = 5;
 let feedbackContext = 'general';
+let feedbackSelectedTags = [];
 
 const membershipOnlyOffers = [
     { code:'MEMBER100', name:'會員入門券', value:100, minSpend:899, expire:'2026/12/31', tag:'註冊禮', desc:'完成會員註冊後開啟，訪客不可使用。' },
@@ -6248,6 +6604,7 @@ if(__plusOriginalSwitchMemberTab){
 function openFeedbackModal(context='general'){
     feedbackContext=context;
     feedbackRating=5;
+    feedbackSelectedTags=[];
     const titleMap={
         general:'意見回饋',
         service:'客服服務評分',
@@ -6257,6 +6614,13 @@ function openFeedbackModal(context='general'){
     };
     const title=document.getElementById('feedbackTitle');
     if(title)title.textContent=titleMap[context]||'意見回饋';
+    const category=document.getElementById('feedbackCategory');
+    if(category){
+        if(context==='support')category.value='客服中心';
+        else if(context==='aftersales' || context==='service')category.value='退換貨 / 售後服務';
+        else category.value='整體使用體驗';
+    }
+    document.querySelectorAll('#feedbackTagBox .quick-tag').forEach(btn=>btn.classList.remove('active'));
     document.getElementById('feedbackWindow').classList.add('open');
     setFeedbackRating(5);
 }
@@ -6272,29 +6636,50 @@ function setFeedbackRating(score){
     });
 }
 
-function submitFeedback(){
+function toggleFeedbackTag(btn, tag){
+    if(feedbackSelectedTags.includes(tag)){
+        feedbackSelectedTags = feedbackSelectedTags.filter(t=>t!==tag);
+        btn.classList.remove('active');
+    }else{
+        feedbackSelectedTags.push(tag);
+        btn.classList.add('active');
+    }
+}
+
+function submitFeedback(openMail=false){
     const name=document.getElementById('feedbackName').value.trim() || '匿名顧客';
     const email=document.getElementById('feedbackEmail').value.trim();
+    const category=document.getElementById('feedbackCategory')?.value || '整體使用體驗';
     const message=document.getElementById('feedbackMessage').value.trim();
-    if(!message){toast('請先填寫回饋內容');return;}
+    if(!message && !feedbackSelectedTags.length){toast('請至少選擇一個回饋項目或填寫內容');return;}
     const list=loadJSON(feedbackKey,[]);
+    const finalMessage = message || feedbackSelectedTags.join('、');
     const item={
         id:'FB'+Date.now(),
         context:feedbackContext,
+        category,
+        tags:feedbackSelectedTags,
         name,
         email,
         rating:feedbackRating,
-        message,
+        message:finalMessage,
         date:today()
     };
     list.unshift(item);
     saveJSON(feedbackKey,list.slice(0,50));
+    if(openMail){
+        const subject=`Picktime 意見回饋｜${category}｜${feedbackRating}星｜${name}`;
+        const body=`管理員您好：\n\n我是 ${name}\nEmail：${email || '未提供'}\n回饋分類：${category}\n評分：${feedbackRating} / 5\n快速標籤：${feedbackSelectedTags.length ? feedbackSelectedTags.join('、') : '未選擇'}\n\n回饋內容：\n${finalMessage}\n\n---\n此信件由 Picktime 意見回饋功能產生。`;
+        setTimeout(()=>{location.href=`mailto:${PICKTIME_OWNER_GMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},250);
+    }
     document.getElementById('feedbackName').value='';
     document.getElementById('feedbackEmail').value='';
     document.getElementById('feedbackMessage').value='';
+    document.querySelectorAll('#feedbackTagBox .quick-tag').forEach(btn=>btn.classList.remove('active'));
+    feedbackSelectedTags=[];
     closeFeedbackModal();
     renderAfterSalesReviews();
-    toast('✅ 感謝你的回饋，我們已收到評分與建議');
+    toast(openMail ? '✅ 回饋已記錄，正在開啟 Email 給管理員' : '✅ 感謝你的回饋，我們已收到評分與建議');
 }
 
 function renderAfterSalesReviews(){
@@ -6310,7 +6695,7 @@ function renderAfterSalesReviews(){
     box.innerHTML=list.map(f=>`
         <div class="review-feed-item">
             <div class="review-feed-head"><span>${escapeHtml(f.name)} · ${f.date}</span><span class="review-feed-stars">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</span></div>
-            <div class="review-feed-text">${escapeHtml(f.message)}</div>
+            <div class="review-feed-text">${f.category?`【${escapeHtml(f.category)}】 `:""}${escapeHtml(f.message)}</div>
         </div>
     `).join('');
 }
@@ -6409,6 +6794,263 @@ if(__plusOriginalShowView){
         if(view==='aftersales')renderAfterSalesReviews();
         if(view==='faq')renderFaqList();
     };
+}
+
+
+// ─────────────────────────────────────────────
+// Bottom-right shopping app style quick support / contact / rating
+// ─────────────────────────────────────────────
+const quickSupportKey = 'picktime_quick_support_tickets';
+const quickContactKey = 'picktime_quick_contact_messages';
+let quickActivePanel = 'support';
+let quickRating = 5;
+let quickSelectedTags = [];
+
+function openQuickPanel(panel='support'){
+    quickActivePanel = panel;
+    const win = document.getElementById('quickPanelWindow');
+    const title = document.getElementById('quickPanelTitle');
+    if(!win || !title)return;
+    const titleMap = {
+        support:'💬 客服中心',
+        contact:'📩 聯絡我們',
+        feedback:'⭐ 顧客評分'
+    };
+    title.textContent = titleMap[panel] || titleMap.support;
+    win.classList.add('open');
+    ['Support','Contact','Feedback'].forEach(name=>{
+        const key = name.toLowerCase();
+        const tab = document.getElementById('quickTab'+name);
+        const btn = document.getElementById('quickBtn'+name);
+        if(tab)tab.classList.toggle('active', key===panel);
+        if(btn)btn.classList.toggle('active', key===panel);
+    });
+    renderQuickPanel(panel);
+}
+
+function closeQuickPanel(){
+    const win = document.getElementById('quickPanelWindow');
+    if(win)win.classList.remove('open');
+    ['Support','Contact','Feedback'].forEach(name=>{
+        const btn = document.getElementById('quickBtn'+name);
+        if(btn)btn.classList.remove('active');
+    });
+}
+
+function renderQuickPanel(panel){
+    const box = document.getElementById('quickPanelContent');
+    if(!box)return;
+    if(panel==='support'){
+        box.innerHTML = `
+            <div class="quick-form">
+                <div class="quick-help-card"><div>🛒</div><div><strong>像購物 App 的客服單</strong><p>填寫問題後會產生客服單號，資料暫存在瀏覽器，也可以再接到 Supabase / Google Sheets。</p></div></div>
+                <input id="quickSupportName" placeholder="姓名 / 暱稱" value="${user && user.name ? escapeHtml(user.name) : ''}">
+                <input id="quickSupportEmail" placeholder="Email" value="${user && user.email ? escapeHtml(user.email) : ''}">
+                <input id="quickSupportOrder" placeholder="訂單編號（沒有可留空）">
+                <select id="quickSupportType">
+                    <option value="訂單問題">訂單問題</option>
+                    <option value="付款問題">付款問題</option>
+                    <option value="物流配送">物流配送</option>
+                    <option value="退換貨 / 售後">退換貨 / 售後</option>
+                    <option value="會員 / 優惠券">會員 / 優惠券</option>
+                    <option value="登入 / 帳號">登入 / 帳號</option>
+                </select>
+                <textarea id="quickSupportMessage" placeholder="請描述問題，例如商品名稱、錯誤畫面、希望客服怎麼協助..."></textarea>
+                <button class="gold-btn" onclick="submitQuickSupport()">送出客服單</button>
+                <button class="ghost-btn" onclick="showView('support');closeQuickPanel()">打開完整客服中心</button>
+                <div class="quick-ticket-result" id="quickSupportResult"></div>
+            </div>`;
+        return;
+    }
+    if(panel==='contact'){
+        box.innerHTML = `
+            <div class="quick-form">
+                <div class="quick-help-card"><div>📮</div><div><strong>一般聯絡表單</strong><p>適合合作、商品建議、網站問題。送出後會保留紀錄，並可一鍵開啟 Email。</p></div></div>
+                <input id="quickContactName" placeholder="姓名 / 暱稱" value="${user && user.name ? escapeHtml(user.name) : ''}">
+                <input id="quickContactEmail" placeholder="Email" value="${user && user.email ? escapeHtml(user.email) : ''}">
+                <select id="quickContactType">
+                    <option value="商品建議">商品建議</option>
+                    <option value="網站操作問題">網站操作問題</option>
+                    <option value="合作提案">合作提案</option>
+                    <option value="專題展示詢問">專題展示詢問</option>
+                    <option value="其他">其他</option>
+                </select>
+                <textarea id="quickContactMessage" placeholder="請輸入你想聯絡我們的內容..."></textarea>
+                <button class="gold-btn" onclick="submitQuickContact(false)">送出聯絡訊息</button>
+                <button class="ghost-btn" onclick="submitQuickContact(true)">送出並開啟 Email</button>
+                <div class="quick-ticket-result" id="quickContactResult"></div>
+            </div>`;
+        return;
+    }
+    quickRating = 5;
+    quickSelectedTags = [];
+    box.innerHTML = `
+        <div class="quick-form">
+            <div class="quick-help-card"><div>⭐</div><div><strong>顧客使用評分</strong><p>參考購物 App 常見做法：星等、快速標籤、文字建議，方便管理者改善商品與客服。</p></div></div>
+            <input id="quickFeedbackName" placeholder="姓名 / 暱稱，可填匿名" value="${user && user.name ? escapeHtml(user.name) : ''}">
+            <div>
+                <div class="hint" style="margin-bottom:8px">整體滿意度</div>
+                <div class="quick-rating-row" id="quickRatingRow">
+                    ${[1,2,3,4,5].map(n=>`<button type="button" class="quick-star active" onclick="setQuickRating(${n})">★</button>`).join('')}
+                    <span class="hint" id="quickRatingText">5 分，非常滿意</span>
+                </div>
+            </div>
+            <div>
+                <div class="hint" style="margin-bottom:8px">快速評價標籤</div>
+                <div class="quick-tags" id="quickTags">
+                    ${['客服回覆快','商品好找','頁面好看','結帳方便','希望更多優惠','圖片再清楚','物流資訊不足','操作有點卡'].map(t=>`<button type="button" class="quick-tag" onclick="toggleQuickTag(this,'${t}')">${t}</button>`).join('')}
+                </div>
+            </div>
+            <textarea id="quickFeedbackMessage" placeholder="請留下你的使用感受，例如：客服、聯絡方式、商品頁、購物車、結帳流程哪裡需要改善..."></textarea>
+            <button class="gold-btn" onclick="submitQuickFeedback()">送出評分</button>
+            <div class="quick-ticket-result" id="quickFeedbackResult"></div>
+            <div>
+                <div class="hint" style="margin-bottom:8px">最近顧客評分</div>
+                <div class="quick-review-mini" id="quickReviewMini"></div>
+            </div>
+        </div>`;
+    renderQuickReviewMini();
+}
+
+function setQuickRating(score){
+    quickRating = score;
+    const textMap = {1:'1 分，需要大幅改善',2:'2 分，不太滿意',3:'3 分，普通',4:'4 分，滿意',5:'5 分，非常滿意'};
+    document.querySelectorAll('#quickRatingRow .quick-star').forEach((btn,i)=>btn.classList.toggle('active', i<score));
+    const text = document.getElementById('quickRatingText');
+    if(text)text.textContent = textMap[score] || '5 分，非常滿意';
+}
+
+function toggleQuickTag(btn, tag){
+    if(quickSelectedTags.includes(tag)){
+        quickSelectedTags = quickSelectedTags.filter(t=>t!==tag);
+        btn.classList.remove('active');
+    }else{
+        quickSelectedTags.push(tag);
+        btn.classList.add('active');
+    }
+}
+
+function submitQuickSupport(){
+    const name = document.getElementById('quickSupportName').value.trim() || '匿名顧客';
+    const email = document.getElementById('quickSupportEmail').value.trim();
+    const orderNo = document.getElementById('quickSupportOrder').value.trim() || '未提供';
+    const type = document.getElementById('quickSupportType').value;
+    const message = document.getElementById('quickSupportMessage').value.trim();
+    if(!email || !email.includes('@')){toast('請輸入正確 Email');return;}
+    if(!message){toast('請先填寫客服問題');return;}
+    const list = loadJSON(quickSupportKey, []);
+    const ticket = {id:'CS'+Date.now(), name, email, orderNo, type, message, status:'待客服回覆', date:today()};
+    list.unshift(ticket);
+    saveJSON(quickSupportKey, list.slice(0,80));
+    const result = document.getElementById('quickSupportResult');
+    if(result){
+        result.classList.add('show');
+        result.innerHTML = `✅ 客服單已建立<br>單號：<strong>${ticket.id}</strong><br>狀態：${ticket.status}<br>客服通常會在 24 小時內回覆。`;
+    }
+    document.getElementById('quickSupportMessage').value='';
+    toast('✅ 客服單已送出');
+}
+
+function submitQuickContact(openMail=false){
+    const name = document.getElementById('quickContactName').value.trim() || '匿名顧客';
+    const email = document.getElementById('quickContactEmail').value.trim();
+    const type = document.getElementById('quickContactType').value;
+    const message = document.getElementById('quickContactMessage').value.trim();
+    if(!email || !email.includes('@')){toast('請輸入正確 Email');return;}
+    if(!message){toast('請先填寫聯絡內容');return;}
+    const list = loadJSON(quickContactKey, []);
+    const item = {id:'CT'+Date.now(), name, email, type, message, date:today()};
+    list.unshift(item);
+    saveJSON(quickContactKey, list.slice(0,80));
+    const result = document.getElementById('quickContactResult');
+    if(result){
+        result.classList.add('show');
+        result.innerHTML = `✅ 聯絡訊息已送出<br>編號：<strong>${item.id}</strong><br>類型：${escapeHtml(type)}`;
+    }
+    toast('✅ 聯絡訊息已記錄');
+    if(openMail){
+        const subject = `Picktime 聯絡我們｜${type}｜${name}`;
+        const body = `您好：
+
+我是 ${name}
+Email：${email}
+聯絡類型：${type}
+
+內容：
+${message}
+
+---
+此信件由 Picktime 右下角聯絡功能產生。`;
+        setTimeout(()=>{location.href=`mailto:${PICKTIME_OWNER_GMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;},250);
+    }
+}
+
+function submitQuickFeedback(){
+    const name = document.getElementById('quickFeedbackName').value.trim() || '匿名顧客';
+    const message = document.getElementById('quickFeedbackMessage').value.trim();
+    if(!message && !quickSelectedTags.length){toast('請至少選一個標籤或填寫意見');return;}
+    const list = loadJSON(feedbackKey, []);
+    const item = {
+        id:'FB'+Date.now(),
+        context:'quick-rating',
+        name,
+        email:user && user.email ? user.email : '',
+        rating:quickRating,
+        tags:quickSelectedTags,
+        message: message || quickSelectedTags.join('、'),
+        date:today()
+    };
+    list.unshift(item);
+    saveJSON(feedbackKey, list.slice(0,80));
+    const result = document.getElementById('quickFeedbackResult');
+    if(result){
+        result.classList.add('show');
+        result.innerHTML = `✅ 感謝評分！<br>你給了 <strong>${quickRating} 星</strong>${quickSelectedTags.length ? '<br>標籤：'+quickSelectedTags.map(escapeHtml).join('、') : ''}`;
+    }
+    document.getElementById('quickFeedbackMessage').value='';
+    document.querySelectorAll('#quickTags .quick-tag').forEach(btn=>btn.classList.remove('active'));
+    quickSelectedTags=[];
+    renderQuickReviewMini();
+    renderAfterSalesReviews();
+    toast('⭐ 感謝你的評分與建議');
+}
+
+function renderQuickReviewMini(){
+    const box = document.getElementById('quickReviewMini');
+    if(!box)return;
+    const list = loadJSON(feedbackKey, []).slice(0,4);
+    if(!list.length){
+        box.innerHTML = '<p class="hint">目前還沒有評分，送出後會顯示最近紀錄。</p>';
+        return;
+    }
+    box.innerHTML = list.map(f=>`
+        <div class="quick-review-item">
+            <div><span>${escapeHtml(f.name||'匿名顧客')}</span><span style="color:#ffd37b">${'★'.repeat(f.rating||5)}${'☆'.repeat(5-(f.rating||5))}</span></div>
+            <p>${escapeHtml(f.message||'已留下評分')}</p>
+        </div>
+    `).join('');
+}
+
+function openFooterSupportCenter(){
+    closeFeedbackModal();
+    closeQuickPanel();
+    showView('support');
+    setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);
+    toast('💬 客服中心：可直接寄信給管理員 kennethleejj@gmail.com');
+}
+
+function openFooterFaqCenter(){
+    closeFeedbackModal();
+    closeQuickPanel();
+    showView('faq');
+    renderFaqList();
+    setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);
+    toast('❓ 已開啟常見問題，包含其他購物 App 常見案例');
+}
+
+function openFooterFeedbackCenter(){
+    closeQuickPanel();
+    openFeedbackModal('footer');
 }
 
 boot().then(async()=>{
