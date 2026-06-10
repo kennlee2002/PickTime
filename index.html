@@ -5723,7 +5723,7 @@ function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v))}
 function money(n){return'NT$ '+Number(n||0).toLocaleString('zh-TW')}
 
 function isImageUrl(value){
-    return typeof value === 'string' && /^https?:\/\//i.test(value);
+    return typeof value === 'string' && /^(https?:\/\/|assets\/|\.\/assets\/|\/assets\/)/i.test(value);
 }
 function productMedia(p, extraClass=''){
     const emoji=p.emoji || '🛍️';
