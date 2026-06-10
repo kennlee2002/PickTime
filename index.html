@@ -4562,35 +4562,29 @@ font-size:48px}
                 <input id="recipientPhone" placeholder="手機號碼 *" />
                 <input id="recipientAddress" placeholder="收件地址 *" />
                 <select id="paymentMethod" onchange="togglePaymentBoxes()">
-                    <option value="貨到付款">💵 貨到付款</option>
-                    <option value="信用卡_TapPay">💳 信用卡 / 金融卡（TapPay 串接）</option>
-                    <option value="TaiwanPay_TWQR">🇹🇼 TaiwanPay / TWQR（QR 收款）</option>
-                    <option value="ATM轉帳">🏦 ATM / 銀行轉帳（需人工對帳）</option>
+                    <option value="貨到付款">💵 貨到付款 / 現金付款</option>
+                    <option value="銀行轉帳">🏦 銀行轉帳（人工確認）</option>
+                    <option value="ATM轉帳">🏧 ATM 轉帳（人工確認）</option>
                 </select>
+                <!-- 信用卡與 TaiwanPay 原本的後端串接程式保留在 JS 內，但前台暫時不開放，避免買家誤付款。 -->
                 <div class="payment-box" id="cardPaymentBox">
-                    <strong>💳 信用卡付款</strong>
-                    <div class="payment-provider-badge">TapPay Direct Pay 架構</div>
-                    <p class="hint">正式刷卡不可把金流金鑰放在 HTML。前端只取得 prime，真正扣款由後端 <code>/api/payments/tappay/pay-by-prime</code> 完成。</p>
-                    <div id="card-number" class="tpfield"></div>
-                    <div id="card-expiration-date" class="tpfield"></div>
-                    <div id="card-ccv" class="tpfield"></div>
-                    <p class="hint" id="tappayStatusText">TapPay 尚未初始化。請在程式碼內填入 TAPPAY_APP_ID / TAPPAY_APP_KEY，並啟動 Node 後端。</p>
+                    <strong>💳 信用卡付款（暫不開放）</strong>
+                    <p class="hint">此功能保留給未來 TapPay / 綠界 / 藍新串接使用，目前不在結帳選項中顯示。</p>
                 </div>
                 <div class="payment-box" id="taiwanPayBox">
-                    <strong>🇹🇼 TaiwanPay / TWQR 收款</strong>
-                    <div class="qr-pay-placeholder" id="twqrPreview">QR</div>
-                    <p class="hint">TaiwanPay 正式線上收款需要向收單機構申請 TWQR / TaiwanPay 商店服務。這裡先提供「QR 收款 + 後台對帳」流程；正式 API / 通知回調要由收單銀行提供。</p>
-                    <input id="taiwanPayRef" placeholder="付款完成後填交易序號 / 帳號後五碼 / 備註（必填）" />
-                    <ul class="payment-risk-list"><li>請不要只看買家截圖，一定要在銀行 / TaiwanPay 商戶後台確認入帳。</li><li>正式上線建議使用金流回調自動改訂單狀態。</li></ul>
+                    <strong>🇹🇼 TaiwanPay / TWQR（暫不開放）</strong>
+                    <p class="hint">此功能保留給未來 TWQR / TaiwanPay 收單申請後使用，目前不在結帳選項中顯示。</p>
                 </div>
                 <div class="bank-payment-box" id="bankPaymentBox">
-                    <strong>🏦 銀行轉帳說明</strong>
+                    <strong>🏦 人工轉帳付款說明</strong>
                     <div class="bank-row"><span>銀行</span><span>中國信託 822</span></div>
                     <div class="bank-row"><span>帳號</span><span><code id="bankAccountNo">1234-5678-9012</code> <button type="button" class="ghost-btn copy-btn" onclick="copyBankAccount()">複製</button></span></div>
                     <div class="bank-row"><span>戶名</span><span>Picktime 拾光機 專題展示</span></div>
-                    <p class="hint" style="margin:8px 0 10px">人工轉帳流程：系統不會自動連銀行扣款；付款後請填轉帳後五碼，後台再人工確認為已付款。</p>
-                    <input id="bankLast5" maxlength="5" inputmode="numeric" placeholder="轉帳帳號後五碼 / 匯款備註（ATM轉帳必填）" />
+                    <p class="hint" style="margin:8px 0 10px">系統不會自動扣款；買家需要自行轉帳。轉帳後填後五碼，你在後台確認入帳後改為「已付款」。</p>
+                    <input id="bankLast5" maxlength="5" inputmode="numeric" placeholder="轉帳後五碼（銀行/ATM轉帳必填）" />
+                    <input id="paymentProofUrl" placeholder="轉帳截圖連結或備註（可選）" />
                 </div>
+                <input id="orderNote" placeholder="訂單備註（可選，例如：希望晚上配送）" />
                 <select id="shippingMethod" onchange="updateShipping()">
                     <option value="home">🚚 宅配到府（滿$1000免運）</option>
                     <option value="711">🏪 7-ELEVEN 取貨（NT$60）</option>
@@ -6255,7 +6249,8 @@ function togglePaymentBoxes(){
     const bank=document.getElementById('bankPaymentBox');
     const card=document.getElementById('cardPaymentBox');
     const twpay=document.getElementById('taiwanPayBox');
-    if(bank)bank.classList.toggle('show',method==='ATM轉帳');
+    if(bank)bank.classList.toggle('show',method==='ATM轉帳'||method==='銀行轉帳');
+    // 信用卡 / TaiwanPay 功能保留，但目前不在付款選單開放。
     if(card)card.classList.toggle('show',method==='信用卡_TapPay');
     if(twpay)twpay.classList.toggle('show',method==='TaiwanPay_TWQR');
     if(method==='信用卡_TapPay') initTapPayFields();
@@ -6328,9 +6323,11 @@ async function checkout(){
     const name=document.getElementById('recipientName').value.trim(),phone=document.getElementById('recipientPhone').value.trim(),address=document.getElementById('recipientAddress').value.trim();
     const payment=document.getElementById('paymentMethod').value,shipping=document.getElementById('shippingMethod').value;
     const bankLast5=(document.getElementById('bankLast5')?.value||'').trim();
+    const paymentProofUrl=(document.getElementById('paymentProofUrl')?.value||'').trim();
+    const orderNote=(document.getElementById('orderNote')?.value||'').trim();
     const taiwanPayRef=(document.getElementById('taiwanPayRef')?.value||'').trim();
     if(!name||!phone||!address){toast('⚠️ 請填寫收件人資料');return;}
-    if(payment==='ATM轉帳'&&!/^\d{5}$/.test(bankLast5)){toast('⚠️ ATM / 銀行轉帳請填 5 位數轉帳後五碼');return;}
+    if((payment==='ATM轉帳'||payment==='銀行轉帳')&&!/^\d{5}$/.test(bankLast5)){toast('⚠️ 銀行 / ATM 轉帳請填 5 位數轉帳後五碼');return;}
     if(payment==='TaiwanPay_TWQR'&&taiwanPayRef.length<4){toast('⚠️ TaiwanPay / TWQR 請填交易序號或付款備註，方便後台對帳');return;}
     const subtotal=cart.reduce((s,i)=>s+i.price*i.qty,0);
     const sf=shipping==='711'||shipping==='family'?60:(subtotal>=1000?0:100);
@@ -6342,7 +6339,7 @@ async function checkout(){
     let paymentStatus='待付款', status='待付款', paymentNote=null, paymentTradeNo=null, paymentProvider=payment;
 
     if(payment==='貨到付款'){paymentStatus='貨到付款';status='處理中';paymentNote='貨到付款，出貨前可由後台確認';}
-    if(payment==='ATM轉帳'){paymentStatus='待付款';status='待付款';paymentNote='ATM / 銀行轉帳待人工對帳：'+bankLast5;}
+    if(payment==='ATM轉帳'||payment==='銀行轉帳'){paymentStatus='待付款';status='待付款';paymentNote=payment+' 待人工對帳，後五碼：'+bankLast5+(paymentProofUrl?'，證明/備註：'+paymentProofUrl:'');}
     if(payment==='TaiwanPay_TWQR'){paymentStatus='待確認';status='待付款';paymentNote='TaiwanPay / TWQR 待對帳：'+taiwanPayRef;}
     if(payment==='信用卡_TapPay'){paymentStatus='刷卡處理中';status='待付款';paymentNote='TapPay 信用卡付款處理中';}
 
@@ -6350,7 +6347,7 @@ async function checkout(){
     couponDiscount=0;
     const {data:{user:authUser}}=await supa.auth.getUser();
     const orderItems=cart.map(i=>({...i}));
-    const op={id:orderId,user_id:authUser?.id||null,recipient_name:name,recipient_phone:phone,recipient_address:address,payment,payment_status:paymentStatus,payment_last5:bankLast5||taiwanPayRef||null,payment_note:paymentNote,payment_provider:paymentProvider,payment_trade_no:paymentTradeNo,shipping,subtotal,shipping_fee:sf,discount:ld+acd,total,status,items:orderItems,logistics_status:'待出貨',tracking_no:null};
+    const op={id:orderId,user_id:authUser?.id||null,recipient_name:name,recipient_phone:phone,recipient_address:address,payment,payment_status:paymentStatus,payment_last5:bankLast5||taiwanPayRef||null,payment_note:paymentNote,payment_provider:paymentProvider,payment_trade_no:paymentTradeNo,payment_proof_url:paymentProofUrl||null,order_note:orderNote||null,shipping,subtotal,shipping_fee:sf,discount:ld+acd,total,status,items:orderItems,logistics_status:'待出貨',tracking_no:null};
     const {error:oe}=await supa.from('orders').insert([op]);
     if(oe){if(oe.code==='42501'||oe.code==='PGRST301'){toast('⚠️ 訂單無法儲存（RLS 未設定）');showDBError('RLS 未設定');}else toast('⚠️ 訂單儲存失敗：'+oe.message);return;}
 
@@ -6368,7 +6365,7 @@ async function checkout(){
         }
     }
 
-    const no={id:orderId,date:today(),amount:total,status,payment,paymentStatus,paymentLast5:bankLast5||taiwanPayRef,shipping,items:orderItems};
+    const no={id:orderId,date:today(),amount:total,status,payment,paymentStatus,paymentLast5:bankLast5||taiwanPayRef,paymentProofUrl,orderNote,shipping,items:orderItems};
     orders.unshift(no);saveJSON(ordersKey,orders);
     user.orders=(user.orders||0)+1;user.spent=(user.spent||0)+total;user.points=(user.points||0)+earnedPoints;
     if(!user.pointsHistory)user.pointsHistory=[];
@@ -6378,11 +6375,13 @@ async function checkout(){
     if(user.id){await supa.from('users').update({spent:user.spent,points:user.points,level:user.level,points_history:JSON.stringify(user.pointsHistory),coupons:JSON.stringify(user.coupons)}).eq('id',user.id);}
     cart=[];saveJSON(cartKey,cart);updateCartBadge();renderCart();updateMemberUI();syncMemberForm();
     document.getElementById('bankLast5')&&(document.getElementById('bankLast5').value='');
+    document.getElementById('paymentProofUrl')&&(document.getElementById('paymentProofUrl').value='');
+    document.getElementById('orderNote')&&(document.getElementById('orderNote').value='');
     document.getElementById('taiwanPayRef')&&(document.getElementById('taiwanPayRef').value='');
     togglePaymentBoxes();
     if(payment==='信用卡_TapPay')toast(`💳 刷卡成功！訂單 ${orderId} 已付款，回饋 ${earnedPoints} 積分`,5000);
     else if(payment==='TaiwanPay_TWQR')toast(`🇹🇼 訂單成立！${orderId} TaiwanPay / TWQR 待後台確認入帳`,5000);
-    else if(payment==='ATM轉帳')toast(`🏦 訂單成立！${orderId} 目前為待付款，請等待後台人工對帳`,5000);
+    else if(payment==='ATM轉帳'||payment==='銀行轉帳')toast(`🏦 訂單成立！${orderId} 目前為待付款，請等待後台人工對帳`,5000);
     else toast(`🎉 訂單成立！${orderId}  回饋 ${earnedPoints} 積分`);
     setTimeout(()=>showView('member'),800);
 }
@@ -6453,8 +6452,8 @@ async function loadAdminOrders(){
     if(error||!ao){document.getElementById('adminOrdersBody').innerHTML='<tr><td colspan="9" style="color:#ff8f8f;padding:20px;text-align:center">載入失敗，請檢查 orders 資料表與 RLS 權限</td></tr>';return;}
     document.getElementById('adminOrdersBody').innerHTML=ao.length?ao.map(o=>{
         const ps=o.payment_status||((o.payment==='ATM轉帳')?'待付款':'—');
-        const note=o.payment_trade_no||o.payment_note||o.payment_last5||'—';
-        return `<tr><td style="font-family:monospace;font-size:12px;color:var(--accent-gold)">${o.id}</td><td style="font-size:12px">${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td style="font-size:12px">${o.payment||'—'}</td><td><select onchange="updateAdminPaymentStatus('${o.id}',this.value)"><option value="待付款" ${ps==='待付款'?'selected':''}>待付款</option><option value="待確認" ${ps==='待確認'?'selected':''}>待確認</option><option value="刷卡處理中" ${ps==='刷卡處理中'?'selected':''}>刷卡處理中</option><option value="已付款" ${ps==='已付款'?'selected':''}>已付款</option><option value="貨到付款" ${ps==='貨到付款'?'selected':''}>貨到付款</option><option value="付款失敗" ${ps==='付款失敗'?'selected':''}>付款失敗</option></select><div style="margin-top:5px"><span class="tag ${paymentStatusClass(ps)}">${ps}</span></div></td><td style="font-family:monospace;color:var(--text-dim);max-width:220px;white-space:normal">${note}</td><td><select onchange="updateAdminOrderStatus('${o.id}',this.value)"><option value="待付款" ${o.status==='待付款'?'selected':''}>待付款</option><option value="處理中" ${o.status==='處理中'?'selected':''}>處理中</option><option value="配送中" ${o.status==='配送中'?'selected':''}>配送中</option><option value="已完成" ${o.status==='已完成'?'selected':''}>已完成</option><option value="已取消" ${o.status==='已取消'?'selected':''}>已取消</option></select><div style="margin-top:5px"><span class="tag ${statusClass(o.status)}">${o.status}</span></div></td><td><input value="${o.tracking_no||''}" placeholder="物流單號" onchange="updateAdminTrackingNo('${o.id}',this.value)" style="max-width:130px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;border-radius:8px;padding:6px"></td></tr>`;
+        const note=[o.payment_trade_no||o.payment_note||o.payment_last5||'', o.payment_proof_url?'證明：'+o.payment_proof_url:'', o.order_note?'備註：'+o.order_note:''].filter(Boolean).join('<br>')||'—';
+        return `<tr><td style="font-family:monospace;font-size:12px;color:var(--accent-gold)">${o.id}</td><td style="font-size:12px">${o.created_at?.slice(0,10)||'—'}</td><td>${o.recipient_name||'—'}</td><td>NT$ ${(o.total||0).toLocaleString()}</td><td style="font-size:12px">${o.payment||'—'}</td><td><select onchange="updateAdminPaymentStatus('${o.id}',this.value)"><option value="待付款" ${ps==='待付款'?'selected':''}>待付款</option><option value="待確認" ${ps==='待確認'?'selected':''}>待確認</option><option value="待付款" ${ps==='銀行轉帳'?'selected':''}>銀行轉帳待付款</option><option value="刷卡處理中" ${ps==='刷卡處理中'?'selected':''}>刷卡處理中</option><option value="已付款" ${ps==='已付款'?'selected':''}>已付款</option><option value="貨到付款" ${ps==='貨到付款'?'selected':''}>貨到付款</option><option value="付款失敗" ${ps==='付款失敗'?'selected':''}>付款失敗</option></select><div style="margin-top:5px"><span class="tag ${paymentStatusClass(ps)}">${ps}</span></div></td><td style="font-family:monospace;color:var(--text-dim);max-width:220px;white-space:normal">${note}</td><td><select onchange="updateAdminOrderStatus('${o.id}',this.value)"><option value="待付款" ${o.status==='待付款'?'selected':''}>待付款</option><option value="處理中" ${o.status==='處理中'?'selected':''}>處理中</option><option value="配送中" ${o.status==='配送中'?'selected':''}>配送中</option><option value="已完成" ${o.status==='已完成'?'selected':''}>已完成</option><option value="已取消" ${o.status==='已取消'?'selected':''}>已取消</option></select><div style="margin-top:5px"><span class="tag ${statusClass(o.status)}">${o.status}</span></div></td><td><input value="${o.tracking_no||''}" placeholder="物流單號" onchange="updateAdminTrackingNo('${o.id}',this.value)" style="max-width:130px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);color:#fff;border-radius:8px;padding:6px"></td></tr>`;
     }).join(''):'<tr><td colspan="9" style="text-align:center;color:var(--text-dim)">無訂單資料</td></tr>';
 }
 async function updateAdminPaymentStatus(id,s){
