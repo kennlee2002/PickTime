@@ -488,25 +488,26 @@ color:#ff6b6b;
 border-color:rgba(255,107,107,.5)}
 
         .product-img{
-height:220px;
+height:260px;
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:16px;
-background:rgba(255,255,255,.02);
-overflow:hidden}
+background:#f8fafc;
+overflow:hidden;
+padding:10px}
 
         .product-photo{
 width:100%;
 height:100%;
 display:block;
-object-fit:cover;
+object-fit:contain;
 object-position:center;
 transition:transform .35s ease, filter .35s ease}
 
         .product-card:hover .product-photo{
-transform:scale(1.04);
-filter:brightness(1.06)}
+transform:scale(1.015);
+filter:brightness(1.04)}
 
         .product-photo-fallback{
 width:100%;
@@ -640,7 +641,26 @@ position:sticky;
 top:104px
         }
 
-        .detail-info{
+        
+        .detail-img-box .product-photo{
+            width:100%;
+            max-height:520px;
+            object-fit:contain;
+            background:#f8fafc;
+            border-radius:22px;
+            padding:12px;
+        }
+
+        .recommend-emoji .product-photo{
+            width:46px;
+            height:46px;
+            object-fit:cover;
+            border-radius:14px;
+            background:#f8fafc;
+            padding:2px;
+        }
+
+.detail-info{
 display:flex;
 flex-direction:column;
 gap:18px}
@@ -5648,7 +5668,7 @@ const productSpecs = {
 };
 
 const productReviews = {
-    1: [{name:'James L.',stars:5,text:'質感超出預期，實際佩戴比照片更有高級感！錶帶非常舒適。',date:'2026/04/12'},{name:'小倩',stars:5,text:'送男友的禮物，他超喜歡，包裝也很精緻。',date:'2026/03/28'},{name:'Kevin',stars:4,text:'防水功能很實用，游泳也沒問題。扣掉一星是因為說明書是英文。',date:'2026/02/15'}],
+    1: [{name:'James L.',stars:5,text:'短袖布料舒服，圓領版型乾淨，日常穿搭很好搭。',date:'2026/04/12'},{name:'小倩',stars:5,text:'實品看起來很有質感，送人或自用都可以。',date:'2026/03/28'},{name:'Kevin',stars:4,text:'版型不錯，深色很耐看，夏天穿也不會太厚。',date:'2026/02/15'}],
     2: [{name:'音樂狂',stars:5,text:'降噪效果真的很強，坐捷運完全聽不到外面，這個價位來說超值！',date:'2026/05/01'},{name:'Maria C.',stars:4,text:'音質很棒，通話降噪也不錯。唯一缺點是耳機架有點緊。',date:'2026/04/10'}],
     3: [{name:'設計師小白',stars:5,text:'跑 Figma 超順，散熱也比上一台好很多，電池很耐用。',date:'2026/03/20'},{name:'學生黨',stars:4,text:'效能沒話說，上課打程式碼都很快。重量稍微偏重。',date:'2026/02/28'}],
     14:[{name:'穿搭控',stars:5,text:'顏色比螢幕上更好看，質感很溫潤，穿起來超級舒服！',date:'2026/05/10'},{name:'日常穿搭',stars:4,text:'羊毛材質很細緻，洗完也沒縮水，推薦！',date:'2026/04/22'}],
@@ -5658,36 +5678,36 @@ const productReviews = {
 // ─── Products Data：已依照你的 SQL id 1–30 固定定位 ───
 const PRODUCT_IMAGE_BASE='https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images';
 const products = [
-    { id:1, name:'質感圓領短袖', price:1280, originalPrice:1580, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id01_quality_crewneck_tshirt.png', emoji:'👕', category:'服飾', rating:4.7, sold:920, desc:'柔軟棉質圓領短袖，版型簡潔百搭，適合日常穿搭與通勤。', badge:'hot', stock:100, is_active:true },
-    { id:2, name:'林光復古耳機', price:2680, originalPrice:3280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id02_retro_headphones.png', emoji:'🎧', category:'3C', rating:4.8, sold:580, desc:'復古外型搭配舒適耳罩，適合聽音樂、上課與日常通勤。', badge:'sale', stock:100, is_active:true },
-    { id:3, name:'極簡真皮背包', price:5200, originalPrice:5600, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id03_minimal_leather_backpack.png', emoji:'🎒', category:'包款', rating:4.7, sold:380, desc:'極簡真皮質感後背包，線條乾淨，適合上課、通勤與簡約穿搭。', badge:'new', stock:100, is_active:true },
-    { id:4, name:'個人皮革背包', price:4980, originalPrice:5480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id04_personal_leather_backpack.png', emoji:'🎒', category:'包款', rating:4.7, sold:430, desc:'實用皮革後背包，多夾層設計，適合個人日常與短途外出。', badge:'', stock:100, is_active:true },
-    { id:5, name:'手機無線充電座', price:990, originalPrice:1290, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id05_wireless_charging_stand.png', emoji:'📱', category:'3C', rating:4.6, sold:890, desc:'直立式手機無線充電座，方便桌面辦公、床邊充電與影片觀看。', badge:'sale', stock:100, is_active:true },
-    { id:6, name:'洗沐旅行組', price:680, originalPrice:880, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id06_travel_toiletry_set.png', emoji:'🧴', category:'生活', rating:4.8, sold:1200, desc:'旅行用洗沐小瓶組，含收納包，適合旅遊、住宿與健身後使用。', badge:'', stock:100, is_active:true },
-    { id:7, name:'光感濾掛香', price:490, originalPrice:690, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id07_hanging_fragrance_sachet.png', emoji:'🌿', category:'生活', rating:4.7, sold:760, desc:'可吊掛式香氛袋，適合衣櫃、房間、車內與辦公空間。', badge:'new', stock:100, is_active:true },
-    { id:8, name:'經典風格外套', price:2980, originalPrice:3480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id08_classic_jacket.png', emoji:'🧥', category:'服飾', rating:4.6, sold:650, desc:'經典外套版型，簡潔耐看，適合秋冬通勤與日常穿搭。', badge:'sale', stock:100, is_active:true },
-    { id:9, name:'星光露營杯', price:590, originalPrice:790, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id09_starry_camping_mug.png', emoji:'☕', category:'生活', rating:4.7, sold:850, desc:'戶外露營杯，星光風格設計，適合露營、辦公與日常飲品。', badge:'new', stock:100, is_active:true },
-    { id:10, name:'職人皮革錢包', price:2480, originalPrice:2480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id10_artisan_leather_wallet.png', emoji:'👝', category:'配件', rating:4.8, sold:430, desc:'職人皮革錢包，質感車線與皮革紋理，適合送禮與自用。', badge:'hot', stock:100, is_active:true },
-    { id:11, name:'北歐桌上型燈具', price:1890, originalPrice:2200, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id11_nordic_desk_lamp.png', emoji:'💡', category:'生活', rating:4.6, sold:310, desc:'北歐簡約桌燈，適合書桌、床頭與工作空間，提升生活質感。', badge:'sale', stock:100, is_active:true },
-    { id:12, name:'旅行保溫瓶', price:980, originalPrice:980, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id12_travel_thermos_bottle.png', emoji:'🍶', category:'生活', rating:4.7, sold:1800, desc:'輕量旅行保溫瓶，適合上課、通勤、旅行與戶外使用。', badge:'', stock:100, is_active:true },
-    { id:13, name:'藍牙鍵盤 TKL', price:2390, originalPrice:2390, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id13_bluetooth_tkl_keyboard.png', emoji:'⌨️', category:'3C', rating:4.6, sold:280, desc:'TKL 配列藍牙鍵盤，節省桌面空間，適合打字、上課與工作。', badge:'new', stock:100, is_active:true },
-    { id:14, name:'UNIQLO 可機洗米蘭羅紋圓領針織衫', price:990, originalPrice:990, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id14_ribbed_crewneck_knit_sweater.png', emoji:'👕', category:'服飾', rating:4.7, sold:920, desc:'可機洗米蘭羅紋圓領針織衫，簡約百搭，適合日常穿搭展示。', badge:'sale', stock:100, is_active:true },
-    { id:15, name:'手沖咖啡禮盒組', price:2180, originalPrice:2180, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id15_pour_over_coffee_gift_set.png', emoji:'☕', category:'美食', rating:4.9, sold:760, desc:'手沖咖啡禮盒，含濾杯、咖啡壺、濾紙與咖啡收納，送禮自用都合適。', badge:'', stock:100, is_active:true },
-    { id:16, name:'植物系護膚套組', price:2890, originalPrice:3200, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id16_botanical_skincare_set.png', emoji:'🌿', category:'美妝', rating:4.7, sold:540, desc:'植物系護膚套組，清爽包裝與保養品組合，適合日常保養展示。', badge:'sale', stock:100, is_active:true },
-    { id:17, name:'電競機械鍵盤', price:3490, originalPrice:3490, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id17_gaming_mechanical_keyboard.png', emoji:'🎮', category:'3C', rating:4.8, sold:410, desc:'RGB 電競機械鍵盤，適合遊戲、打字與桌面設備展示。', badge:'hot', stock:100, is_active:true },
-    { id:18, name:'輕量跑步運動鞋', price:3280, originalPrice:3280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id18_lightweight_running_shoe.png', emoji:'👟', category:'鞋款', rating:4.6, sold:1100, desc:'輕量跑步鞋，透氣鞋面與緩震中底，適合跑步訓練與日常穿搭。', badge:'new', stock:100, is_active:true },
-    { id:19, name:'Air Runner 緩震跑鞋', price:3980, originalPrice:4680, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id19_cushioned_running_shoe.png', emoji:'👟', category:'鞋款', rating:4.8, sold:980, desc:'緩震跑鞋設計，厚實中底與支撐鞋面，適合慢跑與長時間行走。', badge:'new', stock:100, is_active:true },
-    { id:20, name:'Court Classic 復古板鞋', price:2980, originalPrice:3480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id20_retro_court_sneaker.png', emoji:'👟', category:'鞋款', rating:4.7, sold:1320, desc:'復古板鞋風格，低筒百搭版型，適合街頭、校園與日常搭配。', badge:'hot', stock:100, is_active:true },
-    { id:21, name:'Boost Walk 城市休閒鞋', price:3580, originalPrice:4280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id21_urban_walking_sneaker.png', emoji:'👟', category:'鞋款', rating:4.8, sold:870, desc:'城市休閒鞋，柔軟腳感與穩定支撐，適合通勤、旅遊與逛街。', badge:'sale', stock:100, is_active:true },
-    { id:22, name:'Samba Style 德訓休閒鞋', price:3180, originalPrice:3680, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id22_german_trainer_sneaker.png', emoji:'👟', category:'鞋款', rating:4.6, sold:760, desc:'德訓休閒鞋風格，薄底復古輪廓，適合牛仔褲、寬褲與日常穿搭。', badge:'new', stock:100, is_active:true },
-    { id:23, name:'AeroFlex 排汗訓練上衣', price:1280, originalPrice:1580, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id23_moisture_wicking_training_top.png', emoji:'👕', category:'服飾', rating:4.7, sold:1180, desc:'排汗訓練上衣，快乾透氣布料，適合健身、跑步與球類訓練。', badge:'sale', stock:100, is_active:true },
-    { id:24, name:'Club Fleece 連帽外套', price:2380, originalPrice:2880, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id24_fleece_zip_hoodie.png', emoji:'🧥', category:'服飾', rating:4.8, sold:620, desc:'刷毛連帽外套，舒適保暖，適合秋冬通勤、運動後與日常穿搭。', badge:'hot', stock:100, is_active:true },
-    { id:25, name:'Track Pro 運動長褲', price:1980, originalPrice:2380, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id25_track_pro_pants.png', emoji:'👖', category:'服飾', rating:4.6, sold:540, desc:'運動長褲，彈性腰頭與俐落版型，適合訓練與休閒穿搭。', badge:'', stock:100, is_active:true },
-    { id:26, name:'Dri-Fit 球隊訓練短褲', price:1180, originalPrice:1480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id26_team_training_shorts.png', emoji:'🩳', category:'服飾', rating:4.5, sold:830, desc:'球隊訓練短褲，輕量透氣，適合籃球、重訓、跑步與日常運動。', badge:'new', stock:100, is_active:true },
-    { id:27, name:'Performance 運動行李袋', price:1880, originalPrice:2280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id27_performance_duffel_bag.png', emoji:'🎒', category:'包款', rating:4.7, sold:390, desc:'運動行李袋，大容量與多收納，適合健身房、球隊訓練與短途旅行。', badge:'', stock:100, is_active:true },
-    { id:28, name:'Elite 訓練後背包', price:2580, originalPrice:2980, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id28_elite_training_backpack.png', emoji:'🎒', category:'包款', rating:4.8, sold:450, desc:'訓練後背包，多口袋與機能收納，適合上課、通勤與運動使用。', badge:'sale', stock:100, is_active:true },
-    { id:29, name:'Grip Pro 運動襪三入組', price:590, originalPrice:790, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id29_grip_pro_socks_3pack.png', emoji:'🧦', category:'配件', rating:4.6, sold:2100, desc:'運動襪三入組，足底止滑與舒適支撐，適合健身、跑步與日常穿著。', badge:'hot', stock:100, is_active:true },
-    { id:30, name:'Hydro Sport 運動水壺', price:690, originalPrice:890, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id30_hydro_sport_water_bottle.png', emoji:'🥤', category:'配件', rating:4.5, sold:1680, desc:'運動水壺，單手開蓋與防漏設計，適合上課、健身與戶外活動。', badge:'new', stock:100, is_active:true }
+    { id:1, name:'質感圓領短袖', price:1280, originalPrice:1580, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id01_quality_crewneck_tshirt.png?v=20260610', emoji:'👕', category:'服飾', rating:4.7, sold:920, desc:'柔軟棉質圓領短袖，版型簡潔百搭，適合日常穿搭與通勤。', badge:'hot', stock:100, is_active:true },
+    { id:2, name:'林光復古耳機', price:2680, originalPrice:3280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id02_retro_headphones.png?v=20260610', emoji:'🎧', category:'3C', rating:4.8, sold:580, desc:'復古外型搭配舒適耳罩，適合聽音樂、上課與日常通勤。', badge:'sale', stock:100, is_active:true },
+    { id:3, name:'極簡真皮背包', price:5200, originalPrice:5600, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id03_minimal_leather_backpack.png?v=20260610', emoji:'🎒', category:'包款', rating:4.7, sold:380, desc:'極簡真皮質感後背包，線條乾淨，適合上課、通勤與簡約穿搭。', badge:'new', stock:100, is_active:true },
+    { id:4, name:'個人皮革背包', price:4980, originalPrice:5480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id04_personal_leather_backpack.png?v=20260610', emoji:'🎒', category:'包款', rating:4.7, sold:430, desc:'實用皮革後背包，多夾層設計，適合個人日常與短途外出。', badge:'', stock:100, is_active:true },
+    { id:5, name:'手機無線充電座', price:990, originalPrice:1290, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id05_wireless_charging_stand.png?v=20260610', emoji:'📱', category:'3C', rating:4.6, sold:890, desc:'直立式手機無線充電座，方便桌面辦公、床邊充電與影片觀看。', badge:'sale', stock:100, is_active:true },
+    { id:6, name:'洗沐旅行組', price:680, originalPrice:880, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id06_travel_toiletry_set.png?v=20260610', emoji:'🧴', category:'生活', rating:4.8, sold:1200, desc:'旅行用洗沐小瓶組，含收納包，適合旅遊、住宿與健身後使用。', badge:'', stock:100, is_active:true },
+    { id:7, name:'光感濾掛香', price:490, originalPrice:690, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id07_hanging_fragrance_sachet.png?v=20260610', emoji:'🌿', category:'生活', rating:4.7, sold:760, desc:'可吊掛式香氛袋，適合衣櫃、房間、車內與辦公空間。', badge:'new', stock:100, is_active:true },
+    { id:8, name:'經典風格外套', price:2980, originalPrice:3480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id08_classic_jacket.png?v=20260610', emoji:'🧥', category:'服飾', rating:4.6, sold:650, desc:'經典外套版型，簡潔耐看，適合秋冬通勤與日常穿搭。', badge:'sale', stock:100, is_active:true },
+    { id:9, name:'星光露營杯', price:590, originalPrice:790, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id09_starry_camping_mug.png?v=20260610', emoji:'☕', category:'生活', rating:4.7, sold:850, desc:'戶外露營杯，星光風格設計，適合露營、辦公與日常飲品。', badge:'new', stock:100, is_active:true },
+    { id:10, name:'職人皮革錢包', price:2480, originalPrice:2480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id10_artisan_leather_wallet.png?v=20260610', emoji:'👝', category:'配件', rating:4.8, sold:430, desc:'職人皮革錢包，質感車線與皮革紋理，適合送禮與自用。', badge:'hot', stock:100, is_active:true },
+    { id:11, name:'北歐桌上型燈具', price:1890, originalPrice:2200, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id11_nordic_desk_lamp.png?v=20260610', emoji:'💡', category:'生活', rating:4.6, sold:310, desc:'北歐簡約桌燈，適合書桌、床頭與工作空間，提升生活質感。', badge:'sale', stock:100, is_active:true },
+    { id:12, name:'旅行保溫瓶', price:980, originalPrice:980, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id12_travel_thermos_bottle.png?v=20260610', emoji:'🍶', category:'生活', rating:4.7, sold:1800, desc:'輕量旅行保溫瓶，適合上課、通勤、旅行與戶外使用。', badge:'', stock:100, is_active:true },
+    { id:13, name:'藍牙鍵盤 TKL', price:2390, originalPrice:2390, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id13_bluetooth_tkl_keyboard.png?v=20260610', emoji:'⌨️', category:'3C', rating:4.6, sold:280, desc:'TKL 配列藍牙鍵盤，節省桌面空間，適合打字、上課與工作。', badge:'new', stock:100, is_active:true },
+    { id:14, name:'UNIQLO 可機洗米蘭羅紋圓領針織衫', price:990, originalPrice:990, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id14_ribbed_crewneck_knit_sweater.png?v=20260610', emoji:'👕', category:'服飾', rating:4.7, sold:920, desc:'可機洗米蘭羅紋圓領針織衫，簡約百搭，適合日常穿搭展示。', badge:'sale', stock:100, is_active:true },
+    { id:15, name:'手沖咖啡禮盒組', price:2180, originalPrice:2180, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id15_pour_over_coffee_gift_set.png?v=20260610', emoji:'☕', category:'美食', rating:4.9, sold:760, desc:'手沖咖啡禮盒，含濾杯、咖啡壺、濾紙與咖啡收納，送禮自用都合適。', badge:'', stock:100, is_active:true },
+    { id:16, name:'植物系護膚套組', price:2890, originalPrice:3200, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id16_botanical_skincare_set.png?v=20260610', emoji:'🌿', category:'美妝', rating:4.7, sold:540, desc:'植物系護膚套組，清爽包裝與保養品組合，適合日常保養展示。', badge:'sale', stock:100, is_active:true },
+    { id:17, name:'電競機械鍵盤', price:3490, originalPrice:3490, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id17_gaming_mechanical_keyboard.png?v=20260610', emoji:'🎮', category:'3C', rating:4.8, sold:410, desc:'RGB 電競機械鍵盤，適合遊戲、打字與桌面設備展示。', badge:'hot', stock:100, is_active:true },
+    { id:18, name:'輕量跑步運動鞋', price:3280, originalPrice:3280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id18_lightweight_running_shoe.png?v=20260610', emoji:'👟', category:'鞋款', rating:4.6, sold:1100, desc:'輕量跑步鞋，透氣鞋面與緩震中底，適合跑步訓練與日常穿搭。', badge:'new', stock:100, is_active:true },
+    { id:19, name:'Air Runner 緩震跑鞋', price:3980, originalPrice:4680, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id19_cushioned_running_shoe.png?v=20260610', emoji:'👟', category:'鞋款', rating:4.8, sold:980, desc:'緩震跑鞋設計，厚實中底與支撐鞋面，適合慢跑與長時間行走。', badge:'new', stock:100, is_active:true },
+    { id:20, name:'Court Classic 復古板鞋', price:2980, originalPrice:3480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id20_retro_court_sneaker.png?v=20260610', emoji:'👟', category:'鞋款', rating:4.7, sold:1320, desc:'復古板鞋風格，低筒百搭版型，適合街頭、校園與日常搭配。', badge:'hot', stock:100, is_active:true },
+    { id:21, name:'Boost Walk 城市休閒鞋', price:3580, originalPrice:4280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id21_urban_walking_sneaker.png?v=20260610', emoji:'👟', category:'鞋款', rating:4.8, sold:870, desc:'城市休閒鞋，柔軟腳感與穩定支撐，適合通勤、旅遊與逛街。', badge:'sale', stock:100, is_active:true },
+    { id:22, name:'Samba Style 德訓休閒鞋', price:3180, originalPrice:3680, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id22_german_trainer_sneaker.png?v=20260610', emoji:'👟', category:'鞋款', rating:4.6, sold:760, desc:'德訓休閒鞋風格，薄底復古輪廓，適合牛仔褲、寬褲與日常穿搭。', badge:'new', stock:100, is_active:true },
+    { id:23, name:'AeroFlex 排汗訓練上衣', price:1280, originalPrice:1580, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id23_moisture_wicking_training_top.png?v=20260610', emoji:'👕', category:'服飾', rating:4.7, sold:1180, desc:'排汗訓練上衣，快乾透氣布料，適合健身、跑步與球類訓練。', badge:'sale', stock:100, is_active:true },
+    { id:24, name:'Club Fleece 連帽外套', price:2380, originalPrice:2880, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id24_fleece_zip_hoodie.png?v=20260610', emoji:'🧥', category:'服飾', rating:4.8, sold:620, desc:'刷毛連帽外套，舒適保暖，適合秋冬通勤、運動後與日常穿搭。', badge:'hot', stock:100, is_active:true },
+    { id:25, name:'Track Pro 運動長褲', price:1980, originalPrice:2380, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id25_track_pro_pants.png?v=20260610', emoji:'👖', category:'服飾', rating:4.6, sold:540, desc:'運動長褲，彈性腰頭與俐落版型，適合訓練與休閒穿搭。', badge:'', stock:100, is_active:true },
+    { id:26, name:'Dri-Fit 球隊訓練短褲', price:1180, originalPrice:1480, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id26_team_training_shorts.png?v=20260610', emoji:'🩳', category:'服飾', rating:4.5, sold:830, desc:'球隊訓練短褲，輕量透氣，適合籃球、重訓、跑步與日常運動。', badge:'new', stock:100, is_active:true },
+    { id:27, name:'Performance 運動行李袋', price:1880, originalPrice:2280, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id27_performance_duffel_bag.png?v=20260610', emoji:'🎒', category:'包款', rating:4.7, sold:390, desc:'運動行李袋，大容量與多收納，適合健身房、球隊訓練與短途旅行。', badge:'', stock:100, is_active:true },
+    { id:28, name:'Elite 訓練後背包', price:2580, originalPrice:2980, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id28_elite_training_backpack.png?v=20260610', emoji:'🎒', category:'包款', rating:4.8, sold:450, desc:'訓練後背包，多口袋與機能收納，適合上課、通勤與運動使用。', badge:'sale', stock:100, is_active:true },
+    { id:29, name:'Grip Pro 運動襪三入組', price:590, originalPrice:790, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id29_grip_pro_socks_3pack.png?v=20260610', emoji:'🧦', category:'配件', rating:4.6, sold:2100, desc:'運動襪三入組，足底止滑與舒適支撐，適合健身、跑步與日常穿著。', badge:'hot', stock:100, is_active:true },
+    { id:30, name:'Hydro Sport 運動水壺', price:690, originalPrice:890, img:'https://gdxyoweqybcpnlyjujnk.supabase.co/storage/v1/object/public/product-images/id30_hydro_sport_water_bottle.png?v=20260610', emoji:'🥤', category:'配件', rating:4.5, sold:1680, desc:'運動水壺，單手開蓋與防漏設計，適合上課、健身與戶外活動。', badge:'new', stock:100, is_active:true }
 ];
 
 const PRODUCT_ID_LOCK_MAP = Object.fromEntries(products.map(p => [Number(p.id), {...p}]));
@@ -6724,7 +6744,7 @@ function renderUltimateRecommendations(){
         .slice(0,5);
     box.innerHTML=list.map(p=>`
         <div class="recommend-item" onclick="openProductDetail(${p.id})">
-            <div class="recommend-emoji">${p.img}</div>
+            <div class="recommend-emoji">${productMedia(p,'recommend-product-photo')}</div>
             <div>
                 <div class="recommend-title">${p.name}</div>
                 <div class="recommend-reason">依據評分 ${p.rating}、銷售 ${p.sold} 與會員偏好推薦</div>
